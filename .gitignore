@@ -39,3 +39,29 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Local verification outputs
+artifacts/
+test-results/
+playwright-report/
+
+# Distributable binaries are local artifacts
+releases/*.apk
+
+/dist-ios/
+
+/dist-review/
+
+# Local release evidence and private environment files
+/releases/
+.env
+.env.*
+!.env.example
+*.keystore
+*.apk
+*.aab
+/local.properties
+.claude/
+# Personal photo references are never project assets
+/references/
+/assets/references/
