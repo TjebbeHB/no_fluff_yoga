@@ -1,0 +1,67 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android
+
+# Local verification outputs
+artifacts/
+test-results/
+playwright-report/
+
+# Distributable binaries are local artifacts
+releases/*.apk
+
+/dist-ios/
+
+/dist-review/
+
+# Local release evidence and private environment files
+/releases/
+.env
+.env.*
+!.env.example
+*.keystore
+*.apk
+*.aab
+/local.properties
+.claude/
+# Personal photo references are never project assets
+/references/
+/assets/references/
