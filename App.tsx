@@ -22,6 +22,8 @@ import { useAmbientAudio } from "./src/useAmbientAudio";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import Svg, { Path } from "react-native-svg";
 import { Illustration, Sprig } from "./src/Illustration";
+import { usePracticeTimeline } from "./src/usePracticeTimeline";
+import { poseFrame, sampleMotion } from "./src/motion";
 import { useGuidance } from "./src/useGuidance";
 import {
   useLibrary,
@@ -301,7 +303,8 @@ export default function App() {
               <View style={s.footer}>
                 <Text style={s.selectedLabel}>
                   {selected.name} <Text style={{ color: "#A3A896" }}> · </Text>{" "}
-                  {durationLabel(totalSeconds(selected))} for you
+                  {durationLabel(totalSeconds(selected))} holds + time to change
+                  poses
                 </Text>
                 <Button
                   label="Start yoga"
@@ -452,23 +455,37 @@ function Practice({
       if (acquired) release();
     };
   }, []);
-  const [elapsed, setElapsed] = useState(0);
   const [paused, setPaused] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
 
-  const actualSeconds = useRef(0);
-  const clock = useRef(Date.now());
   const finished = useRef(false);
-  const sound = preferences.ambientEnabled;
-  const position = locatePose(routine, elapsed),
-    pose = routine.poses[position.index],
-    next = routine.poses[position.index + 1];
+  const timeline = usePracticeTimeline(routine, paused);
+  const { state } = timeline;
+  const pose = routine.poses[state.index],
+    next = routine.poses[state.index + 1];
+  const changing = state.phase === "move" || state.phase === "reposition";
+  const completedHolds = routine.poses
+    .slice(0, state.index)
+    .reduce((sum, p) => sum + p.seconds, 0);
+  const elapsed = completedHolds + (state.phase === "hold" ? state.time : 0);
+  const position = {
+    index: state.index,
+    remaining: pose
+      ? Math.ceil(pose.seconds - (state.phase === "hold" ? state.time : 0))
+      : 0,
+  };
   const total = totalSeconds(routine);
+  const sound = preferences.ambientEnabled;
+  const frame = pose
+    ? state.phase === "move" && state.plan
+      ? sampleMotion(state.plan, state.time)
+      : poseFrame(pose)
+    : undefined;
   const sessionId = useRef(`session-${Date.now()}`);
   const guidance = useGuidance({
     poseKey: `${sessionId.current}:${position.index}`,
     text: pose ? `${pose.name}${pose.side ? `, ${pose.side} side` : ""}` : "",
-    active: !paused && !!pose && elapsed < total,
+    active: !paused && !!pose && state.phase === "hold",
     chime: preferences.chime,
     speech: preferences.speech,
   });
@@ -478,24 +495,12 @@ function Practice({
     guidance.ducking,
   );
   useEffect(() => {
-    if (paused) return;
-    clock.current = Date.now();
-    const timer = setInterval(() => {
-      const now = Date.now(),
-        delta = (now - clock.current) / 1000;
-      clock.current = now;
-      actualSeconds.current += delta;
-      setElapsed((v) => Math.min(v + delta, total));
-    }, 100);
-    return () => clearInterval(timer);
-  }, [paused, total]);
-  useEffect(() => {
-    if (elapsed >= total && !finished.current) {
+    if (state.phase === "complete" && !finished.current) {
       finished.current = true;
       ambient.stop();
-      onComplete(Math.min(actualSeconds.current, total));
+      onComplete(state.activeSeconds);
     }
-  }, [elapsed, total, onComplete, ambient.stop]);
+  }, [state.phase, state.activeSeconds, onComplete, ambient.stop]);
   useEffect(() => {
     const sub = AppState.addEventListener("change", (state) => {
       if (state !== "active") setPaused(true);
@@ -518,11 +523,11 @@ function Practice({
     };
   }, []);
   useEffect(() => {
-    if (pose && !preferences.speech)
+    if (pose && !preferences.speech && !paused && state.phase === "hold")
       AccessibilityInfo.announceForAccessibility(
         `${pose.name}${pose.side ? `, ${pose.side} side` : ""}. ${pose.cue}`,
       );
-  }, [position.index]);
+  }, [position.index, state.phase]);
   if (!pose) return <View />;
   return (
     <>
@@ -549,7 +554,11 @@ function Practice({
         </View>
         <View style={s.poseHeading}>
           <Text style={s.eyebrow}>
-            {paused ? "A MOMENT TO PAUSE" : "BREATHE. FIND YOUR SPACE."}
+            {paused
+              ? "A MOMENT TO PAUSE"
+              : changing
+                ? "CHANGE POSITION"
+                : "BREATHE. FIND YOUR SPACE."}
           </Text>
           <Text style={s.poseTitle}>{pose.name}</Text>
           <Text style={s.sideLabel}>
@@ -557,23 +566,46 @@ function Practice({
           </Text>
         </View>
         <View style={s.poseArt}>
-          <Illustration
-            shape={pose.shape}
-            side={pose.side}
-            animate
-            paused={paused}
-          />
+          <Illustration shape={pose.shape} side={pose.side} frame={frame} />
           <View style={s.breathePill}>
             <View style={[s.dot, paused && { backgroundColor: "#A7AC9E" }]} />
             <Text style={s.small}>
-              {paused ? "Take your time" : "Breathe naturally"}
+              {paused
+                ? "Paused"
+                : state.phase === "move"
+                  ? "Moving into position"
+                  : state.phase === "reposition"
+                    ? "Move at your own pace"
+                    : "Breathe naturally"}
             </Text>
           </View>
         </View>
-        <Text style={s.cue}>{pose.cue}</Text>
+        <Text style={s.cue}>
+          {state.phase === "move"
+            ? frame?.label || state.plan?.label
+            : state.phase === "reposition"
+              ? "Change to the illustrated position at your own pace. Tap when you are ready."
+              : pose.cue}
+        </Text>
+        {state.phase === "reposition" && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Start pose hold"
+            disabled={paused}
+            onPress={timeline.ready}
+            style={[ui.button, { marginTop: 12 }, paused && { opacity: 0.5 }]}
+          >
+            <Text style={ui.buttonText}>I'm in position</Text>
+          </Pressable>
+        )}
+        {state.queuedIndex !== null && (
+          <Text style={[s.small, { textAlign: "center", marginTop: 8 }]}>
+            Next move queued · finishing this movement first
+          </Text>
+        )}
         {routine.custom && (
           <Text style={[s.small, { textAlign: "center", marginTop: 6 }]}>
-            Target pose · change position at your own pace
+            Move within comfort · take extra time when needed
           </Text>
         )}
         {guidance.speechStatus && (
@@ -590,7 +622,9 @@ function Practice({
         <Text style={s.timerCaption}>
           {paused
             ? "paused · resume when you’re ready"
-            : "remaining in this pose"}
+            : changing
+              ? "hold starts once you’re in position"
+              : "remaining in this pose"}
         </Text>
         <View
           accessibilityRole="progressbar"
@@ -610,7 +644,7 @@ function Practice({
         <View style={s.progressLabels}>
           <Text style={s.small}>YOUR PRACTICE</Text>
           <Text style={s.small}>
-            {formatTime(Math.ceil(total - elapsed))} left
+            {formatTime(Math.ceil(total - elapsed))} holds left
           </Text>
         </View>
         <View style={s.nextCard}>
@@ -638,7 +672,7 @@ function Practice({
             accessibilityRole="button"
             accessibilityLabel={next ? "Skip to next pose" : "Finish practice"}
             style={s.iconButton}
-            onPress={() => setElapsed(position.start + pose.seconds)}
+            onPress={timeline.skip}
           >
             <Icon kind="next" size={19} />
           </Pressable>

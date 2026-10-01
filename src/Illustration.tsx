@@ -1,5 +1,5 @@
-import React, { useEffect, useId, useRef, useState } from "react";
-import { AccessibilityInfo } from "react-native";
+import React, { useId } from "react";
+import { MotionFrame, poseFrame } from "./motion";
 import Svg, {
   Path,
   Circle,
@@ -10,13 +10,7 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 import { Shape } from "./routines";
-import {
-  forms,
-  interpolatePose,
-  limbContour,
-  canMorphPose,
-  Vec,
-} from "./poseGeometry";
+import { limbContour, Vec } from "./poseGeometry";
 export function Sprig({
   size = 52,
   color = "#8C9779",
@@ -47,87 +41,18 @@ export function Illustration({
   animate = false,
   paused = false,
   compact = false,
+  frame: suppliedFrame,
 }: {
   shape: Shape;
   side?: "left" | "right";
   animate?: boolean;
   paused?: boolean;
   compact?: boolean;
+  frame?: MotionFrame;
 }) {
   const id = `figure${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
   const paint = (name: string) => `url(#${id}${name})`;
-  const [points, setPoints] = useState(forms[shape]);
-  const previous = useRef(forms[shape]);
-  const lastPose = useRef({ shape, side });
-  const [shownSide, setShownSide] = useState(side);
-  const [figureOpacity, setFigureOpacity] = useState(1);
-  const [breath, setBreath] = useState(0);
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduced);
-    const sub = AccessibilityInfo.addEventListener(
-      "reduceMotionChanged",
-      setReduced,
-    );
-    return () => sub.remove();
-  }, []);
-  useEffect(() => {
-    const target = forms[shape],
-      from = previous.current;
-    const morph = canMorphPose(
-      lastPose.current.shape,
-      shape,
-      lastPose.current.side,
-      side,
-    );
-    lastPose.current = { shape, side };
-    let frame: number;
-    let start: number | undefined;
-    if (!animate || reduced || paused) {
-      setPoints(target);
-      setShownSide(side);
-      setFigureOpacity(1);
-      previous.current = target;
-      return;
-    }
-    const tick = (now: number) => {
-      start ??= now;
-      const t = Math.min((now - start) / 900, 1),
-        ease = t * t * (3 - 2 * t);
-      if (morph) {
-        const next = interpolatePose(from, target, ease);
-        setPoints(next);
-        previous.current = next;
-        setFigureOpacity(1);
-        setShownSide(side);
-      } else {
-        // Fade out, exchange target at zero opacity, then fade in. No invented
-        // movement path or mirrored-body flip for arbitrary sequence choices.
-        setFigureOpacity(Math.abs(2 * ease - 1));
-        if (t >= 0.5) {
-          setPoints(target);
-          previous.current = target;
-          setShownSide(side);
-        }
-      }
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [shape, side, animate, reduced, paused]);
-  useEffect(() => {
-    if (!animate || paused || reduced) {
-      setBreath(0);
-      return;
-    }
-    let frame: number;
-    const tick = (now: number) => {
-      setBreath(Math.sin(now / 1400) * 1.6);
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [animate, paused, reduced]);
+  const frame = suppliedFrame ?? poseFrame({ shape, side });
   const [
     hx,
     hy,
@@ -155,7 +80,7 @@ export function Illustration({
     leftFootAngle,
     rightFootAngle,
     front,
-  ] = !animate || reduced ? forms[shape] : points;
+  ] = frame.points;
   const length = Math.hypot(px - sx, py - sy) || 1;
   const ux = (px - sx) / length,
     uy = (py - sy) / length;
@@ -163,8 +88,10 @@ export function Illustration({
     `${sx + ux * distance - uy * width} ${sy + uy * distance + ux * width}`;
   const torso = `M${point(0, 17)} C${point(14, 19)} ${point(length * 0.45, 12)} ${point(length * 0.63, 12)} Q${point(length * 0.85, 12)} ${point(length, 18)} Q${point(length + 8, 0)} ${point(length, -18)} C${point(length * 0.65, -10)} ${point(length * 0.45, -14)} ${point(0, -17)} Q${point(-7, 0)} ${point(0, 17)}Z`;
   const top = `M${point(-2, 15)} L${point(-3, 10)} Q${point(14, 0)} ${point(-3, -10)} L${point(-2, -15)} Q${point(13, -20)} ${point(length * 0.3, -16)} Q${point(length * 0.48, -11)} ${point(length * 0.62, -12)} Q${point(length * 0.68, 0)} ${point(length * 0.62, 12)} Q${point(length * 0.43, 13)} ${point(length * 0.3, 16)} Q${point(9, 20)} ${point(-2, 15)}Z`;
-  const shoulder = (width: number): Vec => [sx - uy * width, sy + ux * width];
-  const hip = (width: number): Vec => [px - uy * width, py + ux * width];
+  const shoulder = (width: number): Vec =>
+    width > 0 ? frame.joints.leftShoulder : frame.joints.rightShoulder;
+  const hip = (width: number): Vec =>
+    width > 0 ? frame.joints.leftHip : frame.joints.rightHip;
   const arm = (start: Vec, elbow: Vec, wrist: Vec, back = false) => (
     <G>
       <Path
@@ -180,7 +107,7 @@ export function Illustration({
         opacity={back ? 0.08 : 0.17}
       />
       <G
-        transform={`translate(${wrist[0]} ${wrist[1]}) rotate(${wrist[1] >= 270 && elbow[1] < 255 && hy < 200 ? 0 : (Math.atan2(wrist[1] - elbow[1], wrist[0] - elbow[0]) * 180) / Math.PI})`}
+        transform={`translate(${wrist[0]} ${wrist[1]}) rotate(${(frame.canonical && (shape === "tabletop" || shape === "child")) || (wrist[1] >= 270 && elbow[1] < 255 && hy < 200) ? 0 : (Math.atan2(wrist[1] - elbow[1], wrist[0] - elbow[0]) * 180) / Math.PI})`}
       >
         <Path
           d="M-2 -2.7 C2 -3.1 5 -3.9 8 -3.1 L15 -1.7 Q17 -.9 15.3 .1 L7 .5 Q11 3.2 9.3 4.2 Q8.4 4.8 6.1 3.2 L2 2.8 L-2 2.6Z"
@@ -327,19 +254,12 @@ export function Illustration({
       <Path d="M56 283 L302 283 L326 298 L36 298Z" fill="#8D9A7E" />
       <Path d="M37 299 H326" stroke="#657558" strokeWidth="2" />
       <Ellipse cx="181" cy="287" rx="112" ry="5" fill="#42573F" opacity=".12" />
-      <G
-        opacity={figureOpacity}
-        transform={
-          shownSide === "left" ? "translate(360 0) scale(-1 1)" : undefined
-        }
-      >
-        <G
-          transform={`translate(0 ${(paused || reduced ? 0 : breath) * 0.35})`}
-        >
+      <G>
+        <G>
           {arm(shoulder(-14), [rex, rey], [rhx, rhy], true)}
-          {leg(hip(-6), [rkx, rky], [rfx, rfy - 5], true)}
+          {leg(hip(-6), [rkx, rky], [rfx, rfy], true)}
           {foot(rfx, rfy, rightFootAngle, true)}
-          {leg(hip(6), [lkx, lky], [lfx, lfy - 5])}
+          {leg(hip(6), [lkx, lky], [lfx, lfy])}
           {foot(lfx, lfy, leftFootAngle)}
           <Path d={torso} fill={paint("skin")} />
           <Path
@@ -398,8 +318,8 @@ export function Illustration({
             )}
             fill={paint("skinBack")}
           />
-          <G transform={`translate(${hx} ${hy}) rotate(${headAngle})`}>
-            <G opacity={front < 0.5 ? 1 : 0}>
+          <G transform={`translate(${hx} ${hy}) rotate(${headAngle})${!frame.canonical && side === "left" ? " scale(-1 1)" : ""}`}>
+            <G opacity={1 - front}>
               <Path
                 d="M-9 -12 C-13 -5 -11 8 -7 13 Q-2 18 4 14 L5 10 Q9 11 10 7 L10 4 L14 2 Q15 1 13 -1 L10 -6 Q12 -13 5 -16 Q-4 -20 -9 -12Z"
                 fill={paint("skin")}
@@ -494,7 +414,7 @@ export function Illustration({
                 strokeWidth="1.1"
               />
             </G>
-            <G opacity={front >= 0.5 ? 1 : 0}>
+            <G opacity={front}>
               <Path
                 d="M-10 -11 Q-18 -16 -23 -8 Q-26 1 -16 4 L-9 0Z"
                 fill={paint("hair")}

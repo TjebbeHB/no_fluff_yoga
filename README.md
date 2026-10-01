@@ -52,7 +52,7 @@ Use an Expo Go version compatible with SDK 57, or a local development build. Nat
 
 The script runs Expo prebuild and Gradle, then writes `releases/verdant-yoga-<version>.apk`. It refuses to overwrite an existing APK. Its defaults use Android Studio's bundled Java and the usual macOS SDK location; set `JAVA_HOME` and `ANDROID_HOME` for other installations. Android SDK Build Tools 36.0.0 is used for signature verification.
 
-The current app version is **1.2.0**, Android version code **3**, package `com.verdant.yoga`, targeting Android 7.0/API 24 or newer. This standalone test APK includes the JavaScript and assets and does not require Expo Go or a development server.
+The current app version is **1.3.0**, Android version code **4**, package `com.verdant.yoga`, targeting Android 7.0/API 24 or newer. This standalone test APK includes the JavaScript and assets and does not require Expo Go or a development server.
 
 The build currently uses Expo's default debug signing certificate in a non-debuggable release configuration. It is for personal testing, not configured for Play Store distribution. Set up your own private release signing before publishing. APKs, signing keys, and build intermediates are excluded from this repository.
 
@@ -70,9 +70,19 @@ npm test
 npx expo export --platform all
 ```
 
-The 1.2.0 implementation passed 12 Playwright/controller tests, TypeScript checks, and 21 Expo Doctor checks. Coverage includes routine timing, pause/resume, saved routine editing and persistence, audio switching, speech cancellation during voice-engine initialization, side announcements, ambient ducking, and SVG transition stability. Android assembly and iOS/web exports succeeded; the APK signature, alignment, and bundled audio hashes were verified.
+The 1.3.0 implementation passed 23 Playwright/controller/geometry tests, TypeScript checks, and all 21 Expo Doctor checks. Coverage includes routine timing, pause/resume, saved routine editing and persistence, audio switching, speech cancellation during voice-engine initialization, side announcements, ambient ducking, and SVG transition stability. Android assembly and iOS/web exports succeeded; the APK signature, alignment, and bundled audio hashes were verified.
 
-Screens were reviewed at phone-sized browser viewports. Physical-device installation, voice engines, audio interruptions, speaker listening, and iOS native behavior still need handset testing. An iOS JavaScript export is not an iOS native build. The README image is composed from actual app browser screenshots.
+Movement was captured in 36 live-app scenarios covering every distinct preset transition plus custom side changes and floor reversals, with no browser page errors. Representative previews were refreshed after the final easing and elbow changes. Screens were reviewed at phone-sized browser viewports. Physical-device installation, voice engines, audio interruptions, speaker listening, and iOS native behavior still need handset testing. An iOS JavaScript export is not an iOS native build. The README image is composed from actual app browser screenshots.
+
+## Movement in 1.3.0
+
+Supported transitions use a consistent skeleton and authored movement phases rather than blending unrelated drawings. Standing routes connect Mountain, Upward reach, Chair, Standing fold, Low tree, Warrior II, and Triangle through a neutral stance. Steps shift weight, lift and place a foot, then transfer weight after contact. Side changes step back through neutral rather than mirroring the character. Tabletop ↔ Child’s pose uses a rock-back and one-hand-at-a-time walk along the mat.
+
+Movement takes extra time before each full pose hold. The routine duration describes **holds**, with position changes added. Pausing freezes the exact movement frame; resuming continues it. A skip requested during movement waits for the supported endpoint before continuing to the queued pose. Spoken names and chimes occur on arrival. Reduced Motion displays the target without animated travel.
+
+The current 2D choreography does not cover standing-to-floor changes, lunges, or transitions involving seated/reclined poses. Those changes show the target and wait for **I’m in position**, preserving the complete hold time. This is a deliberate limit: an arbitrary body morph cannot demonstrate a plausible roll or change of support. The artwork remains a stylized guide, not a full biomechanical simulation.
+
+Motion tests sample canonical bone lengths, support contacts, phase seams, side-change routing, and all selectable pairs. Timeline tests cover hold timing, queued skips, pauses, backgrounding, and reduced motion. `scripts/capture_motion.cjs` creates sampled sequences and GIF/MP4 previews; `MOTION_ALL=1` includes every distinct transition in the six presets. Visual review is performed on the movements, not only final poses.
 
 ## Assets and credits
 
