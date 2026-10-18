@@ -7,6 +7,10 @@ export type Preferences = {
   ambientEnabled: boolean;
   chime: boolean;
   speech: boolean;
+  // How the character looks: open smile, Breton stripes, hair in a bun.
+  smile: boolean;
+  stripes: boolean;
+  bun: boolean;
 };
 export type SavedRoutine = {
   id: string;
@@ -27,6 +31,9 @@ export const DEFAULT_STATE: LibraryState = {
     ambientEnabled: true,
     chime: true,
     speech: false,
+    smile: true,
+    stripes: true,
+    bun: false,
   },
 };
 export function validRoutine(value: unknown): value is SavedRoutine {
@@ -75,6 +82,9 @@ export function decodeLibrary(raw: string | null): LibraryState {
         typeof p.ambientEnabled === "boolean" ? p.ambientEnabled : true,
       chime: typeof p.chime === "boolean" ? p.chime : true,
       speech: typeof p.speech === "boolean" ? p.speech : false,
+      smile: typeof p.smile === "boolean" ? p.smile : true,
+      stripes: typeof p.stripes === "boolean" ? p.stripes : true,
+      bun: typeof p.bun === "boolean" ? p.bun : false,
     },
   };
 }

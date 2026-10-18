@@ -118,6 +118,25 @@ test("settings persist and switching audio releases old recording", async ({
     page.getByRole("switch", { name: "Soft transition chime" }),
   ).not.toBeChecked();
   await page.getByRole("switch", { name: "Spoken move names" }).uncheck();
+  // The character's look follows the switches everywhere it is drawn.
+  const art = page.locator('svg[aria-label$="pose illustration"]').first();
+  expect(await art.evaluate((e) => e.outerHTML)).toContain("#46705A");
+  await page.getByRole("switch", { name: "Open smile" }).uncheck();
+  await page.getByRole("switch", { name: "Striped tee" }).uncheck();
+  await page.getByRole("switch", { name: "Hair in a bun" }).check();
+  expect(await art.evaluate((e) => e.outerHTML)).not.toContain("#46705A");
+  await page.getByRole("button", { name: "Close sound settings" }).click();
+  await page.reload();
+  await page.getByRole("button", { name: "Sound & guidance" }).click();
+  await expect(
+    page.getByRole("switch", { name: "Open smile" }),
+  ).not.toBeChecked();
+  await expect(
+    page.getByRole("switch", { name: "Striped tee" }),
+  ).not.toBeChecked();
+  await expect(
+    page.getByRole("switch", { name: "Hair in a bun" }),
+  ).toBeChecked();
   await page.getByRole("button", { name: "Close sound settings" }).click();
   await page.getByRole("button", { name: "Start yoga" }).click();
   await expect(page.getByText("Quiet stream", { exact: true })).toBeVisible();

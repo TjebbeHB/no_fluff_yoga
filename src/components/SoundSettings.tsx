@@ -12,6 +12,45 @@ import { Preferences } from "../storage";
 import { SOUND_OPTIONS } from "../soundCatalog";
 import { useAmbientAudio } from "../useAmbientAudio";
 import { ui, palette } from "./design";
+type Toggle = {
+  key: "ambientEnabled" | "chime" | "speech" | "smile" | "stripes" | "bun";
+  label: string;
+  description: string;
+};
+const SOUND_TOGGLES: Toggle[] = [
+  {
+    key: "ambientEnabled",
+    label: "Nature sounds",
+    description: "Play softly during your practice.",
+  },
+  {
+    key: "chime",
+    label: "Soft transition chime",
+    description: "A small bell when a new move begins.",
+  },
+  {
+    key: "speech",
+    label: "Spoken move names",
+    description: "Hear the move and its left or right side.",
+  },
+];
+const LOOK_TOGGLES: Toggle[] = [
+  {
+    key: "smile",
+    label: "Open smile",
+    description: "A big, open smile. Off for a softer, closed smile.",
+  },
+  {
+    key: "stripes",
+    label: "Striped tee",
+    description: "Cream with green stripes. Off for a plain green sports shirt.",
+  },
+  {
+    key: "bun",
+    label: "Hair in a bun",
+    description: "Hair up for practice. Off to wear it long and loose.",
+  },
+];
 export function SoundSettings({
   preferences,
   onChange,
@@ -24,6 +63,57 @@ export function SoundSettings({
   error: string | null;
 }) {
   const [preview, setPreview] = useState(false);
+  const toggle = (item: Toggle) => (
+    <View
+      key={item.key}
+      style={[
+        ui.row,
+        {
+          paddingVertical: 14,
+          borderBottomWidth: 1,
+          borderColor: palette.line,
+        },
+      ]}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={ui.link}>{item.label}</Text>
+        <Text style={ui.body}>{item.description}</Text>
+      </View>
+      <Pressable
+        accessibilityRole="switch"
+        accessibilityLabel={item.label}
+        accessibilityState={{ checked: preferences[item.key] }}
+        aria-checked={preferences[item.key]}
+        onPress={() => onChange({ [item.key]: !preferences[item.key] })}
+        style={{
+          minWidth: 48,
+          minHeight: 44,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <View
+          style={{
+            width: 40,
+            height: 24,
+            borderRadius: 12,
+            backgroundColor: preferences[item.key] ? palette.sage : "#D9DDCF",
+            padding: 3,
+            alignItems: preferences[item.key] ? "flex-end" : "flex-start",
+          }}
+        >
+          <View
+            style={{
+              width: 18,
+              height: 18,
+              borderRadius: 9,
+              backgroundColor: palette.paper,
+            }}
+          />
+        </View>
+      </Pressable>
+    </View>
+  );
   const audio = useAmbientAudio(preview, preferences.ambient);
   useEffect(() => {
     const sub = AppState.addEventListener("change", (s) => {
@@ -94,81 +184,7 @@ export function SoundSettings({
                 This sound could not play. Try again.
               </Text>
             )}
-            {(
-              [
-                {
-                  key: "ambientEnabled",
-                  label: "Nature sounds",
-                  description: "Play softly during your practice.",
-                },
-                {
-                  key: "chime",
-                  label: "Soft transition chime",
-                  description: "A small bell when a new move begins.",
-                },
-                {
-                  key: "speech",
-                  label: "Spoken move names",
-                  description: "Hear the move and its left or right side.",
-                },
-              ] as const
-            ).map((item) => (
-              <View
-                key={item.key}
-                style={[
-                  ui.row,
-                  {
-                    paddingVertical: 14,
-                    borderBottomWidth: 1,
-                    borderColor: palette.line,
-                  },
-                ]}
-              >
-                <View style={{ flex: 1 }}>
-                  <Text style={ui.link}>{item.label}</Text>
-                  <Text style={ui.body}>{item.description}</Text>
-                </View>
-                <Pressable
-                  accessibilityRole="switch"
-                  accessibilityLabel={item.label}
-                  accessibilityState={{ checked: preferences[item.key] }}
-                  aria-checked={preferences[item.key]}
-                  onPress={() =>
-                    onChange({ [item.key]: !preferences[item.key] })
-                  }
-                  style={{
-                    minWidth: 48,
-                    minHeight: 44,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      width: 40,
-                      height: 24,
-                      borderRadius: 12,
-                      backgroundColor: preferences[item.key]
-                        ? palette.sage
-                        : "#D9DDCF",
-                      padding: 3,
-                      alignItems: preferences[item.key]
-                        ? "flex-end"
-                        : "flex-start",
-                    }}
-                  >
-                    <View
-                      style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: 9,
-                        backgroundColor: palette.paper,
-                      }}
-                    />
-                  </View>
-                </Pressable>
-              </View>
-            ))}
+            {SOUND_TOGGLES.map(toggle)}
             <Text style={[ui.body, { marginTop: 18 }]}>
               Speech uses an English voice from your device. Voice availability
               depends on your system settings. On iPhone, turn silent mode off
@@ -178,6 +194,9 @@ export function SoundSettings({
               Natural recordings are CC0. Rain: Q.K. · Birds: Magnesus · Stream:
               peridactyloptrix.
             </Text>
+            <Text style={[ui.heading, { marginTop: 26 }]}>Character</Text>
+            <Text style={ui.body}>How she looks in every illustration.</Text>
+            {LOOK_TOGGLES.map(toggle)}
             {error && <Text style={ui.error}>{error}</Text>}
           </ScrollView>
         </View>

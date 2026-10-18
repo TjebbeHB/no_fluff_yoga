@@ -21,7 +21,7 @@ import { DMSans_500Medium } from "@expo-google-fonts/dm-sans/500Medium";
 import { useAmbientAudio } from "./src/useAmbientAudio";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import Svg, { Path } from "react-native-svg";
-import { Illustration, Sprig } from "./src/Illustration";
+import { Illustration, LookContext, Sprig } from "./src/Illustration";
 import { usePracticeTimeline } from "./src/usePracticeTimeline";
 import { poseFrame, sampleMotion } from "./src/motion";
 import { useGuidance } from "./src/useGuidance";
@@ -143,282 +143,290 @@ export default function App() {
     );
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
-      <SafeAreaView style={s.root}>
-        <View style={s.shell}>
-          {screen === "home" ? (
-            <>
-              <ScrollView
-                contentContainerStyle={s.home}
-                showsVerticalScrollIndicator={false}
-              >
-                <View style={s.brand}>
-                  <View style={s.brandName}>
-                    <Sprig size={25} color={C.ink} />
-                    <Text style={s.wordmark}>verdant</Text>
-                  </View>
-                  <Text style={s.eyebrow}>A LITTLE SPACE FOR YOU</Text>
-                </View>
-                <View style={s.headingRow}>
-                  <View>
-                    <Text style={s.title}>Your practice.</Text>
-                    <Text style={s.subtitle}>
-                      Come as you are. Begin gently.
-                    </Text>
-                  </View>
-                  <Sprig size={66} />
-                </View>
-                <View style={s.sectionRow}>
-                  <Text style={s.eyebrow}>FIND YOUR FLOW</Text>
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={() => setSettings(true)}
-                    style={ui.textButton}
-                  >
-                    <Text style={ui.link}>Sound & guidance</Text>
-                  </Pressable>
-                </View>
-                <View
-                  style={[
-                    ui.row,
-                    { justifyContent: "flex-start", marginBottom: 12 },
-                  ]}
+      <LookContext.Provider
+        value={{
+          smile: preferences.smile,
+          stripes: preferences.stripes,
+          bun: preferences.bun,
+        }}
+      >
+        <StatusBar style="dark" />
+        <SafeAreaView style={s.root}>
+          <View style={s.shell}>
+            {screen === "home" ? (
+              <>
+                <ScrollView
+                  contentContainerStyle={s.home}
+                  showsVerticalScrollIndicator={false}
                 >
-                  {(["presets", "custom"] as const).map((value) => (
-                    <Pressable
-                      key={value}
-                      accessibilityRole="tab"
-                      accessibilityState={{ selected: tab === value }}
-                      aria-selected={tab === value}
-                      style={[ui.pill, tab === value && ui.selected]}
-                      onPress={() => setTab(value)}
-                    >
-                      <Text style={ui.link}>
-                        {value === "presets" ? "Ready-made" : "My routines"}
+                  <View style={s.brand}>
+                    <View style={s.brandName}>
+                      <Sprig size={25} color={C.ink} />
+                      <Text style={s.wordmark}>verdant</Text>
+                    </View>
+                    <Text style={s.eyebrow}>A LITTLE SPACE FOR YOU</Text>
+                  </View>
+                  <View style={s.headingRow}>
+                    <View>
+                      <Text style={s.title}>Your practice.</Text>
+                      <Text style={s.subtitle}>
+                        Come as you are. Begin gently.
                       </Text>
-                    </Pressable>
-                  ))}
-                </View>
-                {tab === "custom" && (
-                  <>
+                    </View>
+                    <Sprig size={66} />
+                  </View>
+                  <View style={s.sectionRow}>
+                    <Text style={s.eyebrow}>FIND YOUR FLOW</Text>
                     <Pressable
                       accessibilityRole="button"
-                      style={[ui.button, { marginBottom: 12 }]}
-                      onPress={() => {
-                        setEditing(undefined);
-                        setScreen("builder");
-                      }}
+                      onPress={() => setSettings(true)}
+                      style={ui.textButton}
                     >
-                      <Text style={ui.buttonText}>Create a routine</Text>
+                      <Text style={ui.link}>Sound & guidance</Text>
                     </Pressable>
-                    {!customRoutines.length && (
-                      <Text style={[ui.body, { marginVertical: 20 }]}>
-                        Make room for your favorite moves. Choose, arrange, and
-                        save a practice that feels like you.
-                      </Text>
-                    )}
-                  </>
-                )}
-                {library.error && <Text style={ui.error}>{library.error}</Text>}
-                {shownRoutines.map((r) => (
-                  <Pressable
-                    key={r.id}
-                    accessibilityRole="radio"
-                    accessibilityState={{ checked: r.id === selected.id }}
-                    aria-checked={r.id === selected.id}
-                    accessibilityLabel={`${r.name}, ${r.minutes} minutes`}
-                    onPress={() => setSelected(r)}
-                    style={({ pressed }) => [
-                      s.card,
-                      selected.id === r.id && s.selectedCard,
-                      pressed && s.pressed,
+                  </View>
+                  <View
+                    style={[
+                      ui.row,
+                      { justifyContent: "flex-start", marginBottom: 12 },
                     ]}
                   >
-                    <View style={[s.cardArt, { backgroundColor: r.color }]}>
-                      <Illustration shape={r.art} compact />
-                    </View>
-                    <View style={s.cardContent}>
-                      <Text style={s.cardMood}>{r.mood}</Text>
-                      <Text style={s.cardTitle}>{r.name}</Text>
-                      <Text style={s.small}>
-                        {durationLabel(totalSeconds(r))} · {r.poses.length}{" "}
-                        moves
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        s.radio,
-                        selected.id === r.id && {
-                          backgroundColor: C.sage,
-                          borderColor: C.sage,
-                        },
-                      ]}
-                    >
-                      {selected.id === r.id && (
-                        <Icon kind="check" color="white" size={13} />
-                      )}
-                    </View>
-                  </Pressable>
-                ))}
-                {tab === "custom" &&
-                  selected.custom &&
-                  library.state.routines.some((r) => r.id === selected.id) && (
-                    <View style={ui.row}>
+                    {(["presets", "custom"] as const).map((value) => (
+                      <Pressable
+                        key={value}
+                        accessibilityRole="tab"
+                        accessibilityState={{ selected: tab === value }}
+                        aria-selected={tab === value}
+                        style={[ui.pill, tab === value && ui.selected]}
+                        onPress={() => setTab(value)}
+                      >
+                        <Text style={ui.link}>
+                          {value === "presets" ? "Ready-made" : "My routines"}
+                        </Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                  {tab === "custom" && (
+                    <>
                       <Pressable
                         accessibilityRole="button"
-                        style={ui.textButton}
+                        style={[ui.button, { marginBottom: 12 }]}
                         onPress={() => {
-                          setEditing(
-                            library.state.routines.find(
-                              (r) => r.id === selected.id,
-                            ),
-                          );
+                          setEditing(undefined);
                           setScreen("builder");
                         }}
                       >
-                        <Text style={ui.link}>Edit routine</Text>
+                        <Text style={ui.buttonText}>Create a routine</Text>
                       </Pressable>
-                      <Pressable
-                        accessibilityRole="button"
-                        style={ui.textButton}
-                        onPress={() =>
-                          setDeleting(
-                            library.state.routines.find(
-                              (r) => r.id === selected.id,
-                            )!,
-                          )
-                        }
-                      >
-                        <Text style={ui.link}>Delete routine</Text>
-                      </Pressable>
-                    </View>
+                      {!customRoutines.length && (
+                        <Text style={[ui.body, { marginVertical: 20 }]}>
+                          Make room for your favorite moves. Choose, arrange, and
+                          save a practice that feels like you.
+                        </Text>
+                      )}
+                    </>
                   )}
-                <View style={s.note}>
-                  <Sprig size={27} />
-                  <Text style={s.noteText}>
-                    No goals to chase. Just a moment to return to yourself.
+                  {library.error && <Text style={ui.error}>{library.error}</Text>}
+                  {shownRoutines.map((r) => (
+                    <Pressable
+                      key={r.id}
+                      accessibilityRole="radio"
+                      accessibilityState={{ checked: r.id === selected.id }}
+                      aria-checked={r.id === selected.id}
+                      accessibilityLabel={`${r.name}, ${r.minutes} minutes`}
+                      onPress={() => setSelected(r)}
+                      style={({ pressed }) => [
+                        s.card,
+                        selected.id === r.id && s.selectedCard,
+                        pressed && s.pressed,
+                      ]}
+                    >
+                      <View style={[s.cardArt, { backgroundColor: r.color }]}>
+                        <Illustration shape={r.art} compact />
+                      </View>
+                      <View style={s.cardContent}>
+                        <Text style={s.cardMood}>{r.mood}</Text>
+                        <Text style={s.cardTitle}>{r.name}</Text>
+                        <Text style={s.small}>
+                          {durationLabel(totalSeconds(r))} · {r.poses.length}{" "}
+                          moves
+                        </Text>
+                      </View>
+                      <View
+                        style={[
+                          s.radio,
+                          selected.id === r.id && {
+                            backgroundColor: C.sage,
+                            borderColor: C.sage,
+                          },
+                        ]}
+                      >
+                        {selected.id === r.id && (
+                          <Icon kind="check" color="white" size={13} />
+                        )}
+                      </View>
+                    </Pressable>
+                  ))}
+                  {tab === "custom" &&
+                    selected.custom &&
+                    library.state.routines.some((r) => r.id === selected.id) && (
+                      <View style={ui.row}>
+                        <Pressable
+                          accessibilityRole="button"
+                          style={ui.textButton}
+                          onPress={() => {
+                            setEditing(
+                              library.state.routines.find(
+                                (r) => r.id === selected.id,
+                              ),
+                            );
+                            setScreen("builder");
+                          }}
+                        >
+                          <Text style={ui.link}>Edit routine</Text>
+                        </Pressable>
+                        <Pressable
+                          accessibilityRole="button"
+                          style={ui.textButton}
+                          onPress={() =>
+                            setDeleting(
+                              library.state.routines.find(
+                                (r) => r.id === selected.id,
+                              )!,
+                            )
+                          }
+                        >
+                          <Text style={ui.link}>Delete routine</Text>
+                        </Pressable>
+                      </View>
+                    )}
+                  <View style={s.note}>
+                    <Sprig size={27} />
+                    <Text style={s.noteText}>
+                      No goals to chase. Just a moment to return to yourself.
+                    </Text>
+                  </View>
+                </ScrollView>
+                <View style={s.footer}>
+                  <Text style={s.selectedLabel}>
+                    {selected.name} <Text style={{ color: "#A3A896" }}> · </Text>{" "}
+                    {durationLabel(totalSeconds(selected))} holds + time to change
+                    poses
+                  </Text>
+                  <Button
+                    label="Start yoga"
+                    onPress={() => setScreen("practice")}
+                  />
+                  <Text style={s.footerNote}>
+                    Move within comfort. Rest whenever you need.
                   </Text>
                 </View>
-              </ScrollView>
-              <View style={s.footer}>
-                <Text style={s.selectedLabel}>
-                  {selected.name} <Text style={{ color: "#A3A896" }}> · </Text>{" "}
-                  {durationLabel(totalSeconds(selected))} holds + time to change
-                  poses
+              </>
+            ) : screen === "builder" ? (
+              <RoutineBuilder
+                initial={editing}
+                onCancel={() => setScreen("home")}
+                onSave={async (saved) => {
+                  await library.persist((previous) => ({
+                    ...previous,
+                    routines: [
+                      ...previous.routines.filter((r) => r.id !== saved.id),
+                      saved,
+                    ],
+                  }));
+                  setSelected(materialize(saved));
+                  setTab("custom");
+                  setScreen("home");
+                }}
+              />
+            ) : screen === "practice" ? (
+              <Practice
+                routine={selected}
+                preferences={preferences}
+                setSound={(enabled) =>
+                  changePreferences({ ambientEnabled: enabled })
+                }
+                onOpenSettings={() => setSettings(true)}
+                onExit={() => setScreen("home")}
+                onComplete={(seconds) => {
+                  setCompletedSeconds(seconds);
+                  setScreen("complete");
+                }}
+              />
+            ) : (
+              <View style={s.complete}>
+                <Sprig size={74} />
+                <Text style={s.eyebrow}>PRACTICE COMPLETE</Text>
+                <Text style={[s.title, { textAlign: "center" }]}>
+                  A little more{"\n"}grounded.
                 </Text>
-                <Button
-                  label="Start yoga"
-                  onPress={() => setScreen("practice")}
-                />
-                <Text style={s.footerNote}>
-                  Move within comfort. Rest whenever you need.
+                <View style={{ width: "100%", height: 260 }}>
+                  <Illustration shape="seated" />
+                </View>
+                <Text style={s.subtitle}>
+                  Thank you for showing up for yourself.
                 </Text>
-              </View>
-            </>
-          ) : screen === "builder" ? (
-            <RoutineBuilder
-              initial={editing}
-              onCancel={() => setScreen("home")}
-              onSave={async (saved) => {
-                await library.persist((previous) => ({
-                  ...previous,
-                  routines: [
-                    ...previous.routines.filter((r) => r.id !== saved.id),
-                    saved,
-                  ],
-                }));
-                setSelected(materialize(saved));
-                setTab("custom");
-                setScreen("home");
-              }}
-            />
-          ) : screen === "practice" ? (
-            <Practice
-              routine={selected}
-              preferences={preferences}
-              setSound={(enabled) =>
-                changePreferences({ ambientEnabled: enabled })
-              }
-              onOpenSettings={() => setSettings(true)}
-              onExit={() => setScreen("home")}
-              onComplete={(seconds) => {
-                setCompletedSeconds(seconds);
-                setScreen("complete");
-              }}
-            />
-          ) : (
-            <View style={s.complete}>
-              <Sprig size={74} />
-              <Text style={s.eyebrow}>PRACTICE COMPLETE</Text>
-              <Text style={[s.title, { textAlign: "center" }]}>
-                A little more{"\n"}grounded.
-              </Text>
-              <View style={{ width: "100%", height: 260 }}>
-                <Illustration shape="seated" />
-              </View>
-              <Text style={s.subtitle}>
-                Thank you for showing up for yourself.
-              </Text>
-              <Text style={[s.small, { marginTop: 12, marginBottom: 32 }]}>
-                {selected.name} · {Math.floor(completedSeconds / 60)} min{" "}
-                {Math.floor(completedSeconds % 60)} sec practiced
-              </Text>
-              <View style={{ width: "100%" }}>
-                <Button
-                  label="Back to your practice"
-                  onPress={() => setScreen("home")}
-                />
-              </View>
-            </View>
-          )}
-          {settings && (
-            <SoundSettings
-              preferences={preferences}
-              onChange={changePreferences}
-              onClose={() => setSettings(false)}
-              error={library.error}
-            />
-          )}
-          <Modal
-            visible={!!deleting}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setDeleting(null)}
-          >
-            <View style={ui.overlay}>
-              <View style={ui.dialog}>
-                <Text style={ui.heading}>Delete {deleting?.name}?</Text>
-                <Text style={[ui.body, { marginVertical: 16 }]}>
-                  This removes the saved routine from this device.
+                <Text style={[s.small, { marginTop: 12, marginBottom: 32 }]}>
+                  {selected.name} · {Math.floor(completedSeconds / 60)} min{" "}
+                  {Math.floor(completedSeconds % 60)} sec practiced
                 </Text>
-                <Button
-                  label="Keep routine"
-                  onPress={() => setDeleting(null)}
-                />
-                <View style={ui.gap} />
-                <Button
-                  label="Delete saved routine"
-                  secondary
-                  onPress={() => {
-                    const id = deleting?.id;
-                    void library
-                      .persist((previous) => ({
-                        ...previous,
-                        routines: previous.routines.filter((r) => r.id !== id),
-                      }))
-                      .then(() => {
-                        if (selected.id === id) setSelected(routines[0]);
-                        setDeleting(null);
-                      })
-                      .catch(() => {});
-                  }}
-                />
-                {library.error && <Text style={ui.error}>{library.error}</Text>}
+                <View style={{ width: "100%" }}>
+                  <Button
+                    label="Back to your practice"
+                    onPress={() => setScreen("home")}
+                  />
+                </View>
               </View>
-            </View>
-          </Modal>
-        </View>
-      </SafeAreaView>
+            )}
+            {settings && (
+              <SoundSettings
+                preferences={preferences}
+                onChange={changePreferences}
+                onClose={() => setSettings(false)}
+                error={library.error}
+              />
+            )}
+            <Modal
+              visible={!!deleting}
+              transparent
+              animationType="fade"
+              onRequestClose={() => setDeleting(null)}
+            >
+              <View style={ui.overlay}>
+                <View style={ui.dialog}>
+                  <Text style={ui.heading}>Delete {deleting?.name}?</Text>
+                  <Text style={[ui.body, { marginVertical: 16 }]}>
+                    This removes the saved routine from this device.
+                  </Text>
+                  <Button
+                    label="Keep routine"
+                    onPress={() => setDeleting(null)}
+                  />
+                  <View style={ui.gap} />
+                  <Button
+                    label="Delete saved routine"
+                    secondary
+                    onPress={() => {
+                      const id = deleting?.id;
+                      void library
+                        .persist((previous) => ({
+                          ...previous,
+                          routines: previous.routines.filter((r) => r.id !== id),
+                        }))
+                        .then(() => {
+                          if (selected.id === id) setSelected(routines[0]);
+                          setDeleting(null);
+                        })
+                        .catch(() => {});
+                    }}
+                  />
+                  {library.error && <Text style={ui.error}>{library.error}</Text>}
+                </View>
+              </View>
+            </Modal>
+          </View>
+        </SafeAreaView>
+      </LookContext.Provider>
     </SafeAreaProvider>
   );
 }
