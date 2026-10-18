@@ -56,6 +56,10 @@ The current app version is **1.4.0**, Android version code **5**, package `com.v
 
 The build currently uses Expo's default debug signing certificate in a non-debuggable release configuration. It is for personal testing, not configured for Play Store distribution. Set up your own private release signing before publishing. APKs, signing keys, and build intermediates are excluded from this repository.
 
+## Build for iPhone
+
+The iOS bundle identifier is `com.tjebbehb.verdantyoga` (team `2RD8HX7BRW`). Run `npx expo prebuild --platform ios`, then `pod install` in `ios/` with a UTF-8 locale (`LANG=en_US.UTF-8`), and archive the `VerdantYoga` scheme in Xcode. `plugins/withQuotedScriptPaths.js` quotes two generated build-script paths that otherwise break on the space in this folder's name. TestFlight uploads need an App Store Connect app record for the bundle identifier.
+
 ## Validation
 
 ```sh
