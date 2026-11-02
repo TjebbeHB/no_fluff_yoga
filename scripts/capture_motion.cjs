@@ -37,7 +37,7 @@ if(process.env.MOTION_CASES) cases=cases.filter(c=>process.env.MOTION_CASES.spli
  const errors = [];
  for (const [name, from, to] of cases) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'no-preference' });
-  await context.addInitScript(({ from, to }) => localStorage.setItem('verdant.library.v1', JSON.stringify({ version: 1, routines: [{ id: 'custom-motion', name: 'Movement review', steps: [{ poseId: from, seconds: 15 }, { poseId: to, seconds: 15 }] }], preferences: { ambient: 'rain', ambientEnabled: false, chime: false, speech: false } })), { from, to });
+  await context.addInitScript(({ from, to }) => localStorage.setItem('verdant.library.v1', JSON.stringify({ version: 1, routines: [{ id: 'custom-motion', name: 'Movement review', steps: [{ poseId: from, seconds: 15 }, { poseId: to, seconds: 15 }] }], preferences: { ambient: 'rain', ambientEnabled: false, chime: false, guide: false } })), { from, to });
   const page = await context.newPage();
   page.on('pageerror', e => errors.push(`${name}: ${e.message}`));
   await page.clock.install();

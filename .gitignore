@@ -40,6 +40,10 @@ yarn-error.*
 /ios
 /android
 
+# Voice-pack tooling (see scripts/generate_voices.py)
+.venv/
+/lines.json
+
 # Local verification outputs
 artifacts/
 test-results/

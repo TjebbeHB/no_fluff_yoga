@@ -1,0 +1,736 @@
+{
+ "format": 1,
+ "model": "Paradee 1.2 (Apache-2.0), distilled from Kokoro-82M",
+ "voice": "bf_isabella",
+ "bytes": 3802986,
+ "lines": {
+  "intro": {
+   "file": "intro.m4a",
+   "bytes": 40488,
+   "sha256": "7d9760ab3261fab48c05e6bc57953bc2fb4bdac2fe6a0abda4317db4329961e1",
+   "seconds": 6.63,
+   "text": "Welcome. Find a comfortable spot on your mat, and let your breath settle."
+  },
+  "outro": {
+   "file": "outro.m4a",
+   "bytes": 65643,
+   "sha256": "c046e9d213a437605996234db4024e78a54e75e5e1bf58fc7d323fc3b2403b75",
+   "seconds": 10.4,
+   "text": "That's the end of your practice. Stay here as long as you like. When you're ready, roll onto your side and come up slowly."
+  },
+  "outro.brief": {
+   "file": "outro.brief.m4a",
+   "bytes": 26730,
+   "sha256": "0c1bb1fbc5de9f31c0fc3a24bf2c515508964996892bfa8174e008f1d5eff8cb",
+   "seconds": 4.51,
+   "text": "That's your practice. Well done."
+  },
+  "switch": {
+   "file": "switch.m4a",
+   "bytes": 22807,
+   "sha256": "7c6c0be53711e0c52f406968209a50fe2d058ceed86b7a969ebedf2492384126",
+   "seconds": 3.69,
+   "text": "Gently release, and let's do the other side."
+  },
+  "switch.brief": {
+   "file": "switch.brief.m4a",
+   "bytes": 15277,
+   "sha256": "26d41ce9e713b5348e82d9452912706aba0b3f849a83d0f4559a72fd02f21f1d",
+   "seconds": 2.5,
+   "text": "Now the other side."
+  },
+  "breaths.0": {
+   "file": "breaths.0.m4a",
+   "bytes": 17514,
+   "sha256": "d8b4c5c051e6bd45c8963a414c5c30b27422b542401dc576455fdb922c01e6e6",
+   "seconds": 2.87,
+   "text": "Stay for a few more breaths."
+  },
+  "breaths.1": {
+   "file": "breaths.1.m4a",
+   "bytes": 18795,
+   "sha256": "ce8c15b08a13f7e390bf1453be64fda0a85399207c0e1179e469ece6e13d3214",
+   "seconds": 2.97,
+   "text": "Two more slow breaths here."
+  },
+  "breaths.2": {
+   "file": "breaths.2.m4a",
+   "bytes": 36486,
+   "sha256": "60bd5fbbaa7f6031d028ddeabf4477dfe366a5fec6a8f840342b4ebbd9dd2cbf",
+   "seconds": 5.31,
+   "text": "Just a little longer. Keep breathing softly."
+  },
+  "sample": {
+   "file": "sample.m4a",
+   "bytes": 36845,
+   "sha256": "028eac4363513d326b789c42c3eb3a937a366c22335c191bf630ee3c0efb7731",
+   "seconds": 5.88,
+   "text": "Hello. I'll guide you through your practice, one pose at a time."
+  },
+  "mountain.first": {
+   "file": "mountain.first.m4a",
+   "bytes": 21840,
+   "sha256": "1e250dbe7a2fa4f36914943b08527db23dd1f7dd8af95587a605acaf7c7d44b9",
+   "seconds": 3.29,
+   "text": "Let's begin with mountain pose."
+  },
+  "mountain.next": {
+   "file": "mountain.next.m4a",
+   "bytes": 17615,
+   "sha256": "d71ae0e8c715f2693e295602d135d9dd9b6fa1002d73e09ab903b18ed0ee860c",
+   "seconds": 2.9,
+   "text": "Next, mountain pose."
+  },
+  "mountain.now": {
+   "file": "mountain.now.m4a",
+   "bytes": 17098,
+   "sha256": "dd49bdc24e120b55807ee48db7a19637ad7cd531e8e69ee1826d03f6c0e322cb",
+   "seconds": 2.82,
+   "text": "Now, mountain pose."
+  },
+  "mountain.enter": {
+   "file": "mountain.enter.m4a",
+   "bytes": 74857,
+   "sha256": "0c86238426e7b3182877848494bacc59a6e6369e977cc6d4132fe85f62c8aa5c",
+   "seconds": 11.95,
+   "text": "Mountain pose. Come to stand with your feet about hip-width apart and your arms resting by your sides. Lengthen up through the top of your head."
+  },
+  "mountain.hold": {
+   "file": "mountain.hold.m4a",
+   "bytes": 49767,
+   "sha256": "519a7ecd6c938be0717c9c6622fbac98ac6f45cf33b70894650473a135076191",
+   "seconds": 7.99,
+   "text": "Feel your feet grounded on the mat. Soften your knees, let your shoulders settle, and breathe slowly."
+  },
+  "reach.first": {
+   "file": "reach.first.m4a",
+   "bytes": 19381,
+   "sha256": "ed83003f195296869b6be6e6f66b66e425b0aca84bebfc7a1833e8443cff1ea9",
+   "seconds": 3.12,
+   "text": "Let's begin with upward reach."
+  },
+  "reach.next": {
+   "file": "reach.next.m4a",
+   "bytes": 16813,
+   "sha256": "f09b498c1089c5ee6a574dc712c45bf2dfb68e0ce75053307ff05cf9c0666d05",
+   "seconds": 2.69,
+   "text": "Next, upward reach."
+  },
+  "reach.now": {
+   "file": "reach.now.m4a",
+   "bytes": 16271,
+   "sha256": "1b5822f69eba6e081a6becd04ea5b7380e434062c414058b9514149b678beb97",
+   "seconds": 2.62,
+   "text": "Now, upward reach."
+  },
+  "reach.enter": {
+   "file": "reach.enter.m4a",
+   "bytes": 67110,
+   "sha256": "816853728882d9b45a707b46c1cd5d22fe9200665d5b16f1cc541020bf6bfe06",
+   "seconds": 10.78,
+   "text": "Upward reach. Breathing in, sweep both arms out to the sides and up toward the sky. Reach gently through your fingertips."
+  },
+  "reach.hold": {
+   "file": "reach.hold.m4a",
+   "bytes": 47902,
+   "sha256": "8bab5b19c3107be4446999b5ee48011c9b50ba93da3cf95459573a170a04409f",
+   "seconds": 7.54,
+   "text": "Keep your shoulders soft and away from your ears. Let your ribs stay easy as you breathe."
+  },
+  "fold.first": {
+   "file": "fold.first.m4a",
+   "bytes": 20763,
+   "sha256": "7cf9f68c5e9fd9f4ba68543566ad563ef385db04ff20185d3d399440fc2131f9",
+   "seconds": 3.32,
+   "text": "Let's begin with standing fold."
+  },
+  "fold.next": {
+   "file": "fold.next.m4a",
+   "bytes": 17582,
+   "sha256": "41306cbe4e71827964c4984fbbb43db9e6c7dfa50fb71c0089b0d0dcb06ba544",
+   "seconds": 2.87,
+   "text": "Next, standing fold."
+  },
+  "fold.now": {
+   "file": "fold.now.m4a",
+   "bytes": 17170,
+   "sha256": "ec3f7948ab95a789160b8f046cf43093672fa7b845e10baebbf389a849ba9007",
+   "seconds": 2.82,
+   "text": "Now, standing fold."
+  },
+  "fold.enter": {
+   "file": "fold.enter.m4a",
+   "bytes": 62117,
+   "sha256": "ff16dc2c3754cde69a043f252936eca6c1400884640f0f30e290ed4c0e16de24",
+   "seconds": 10.12,
+   "text": "Standing fold. Soften your knees and hinge forward from your hips. Let your upper body hang down toward the mat."
+  },
+  "fold.hold": {
+   "file": "fold.hold.m4a",
+   "bytes": 44723,
+   "sha256": "9a15170bc00543f7b255894338f10008cfc3d8e4dd191305968f75f6b8a0fdf4",
+   "seconds": 7.11,
+   "text": "Let your head feel heavy and your arms dangle. Bend your knees as much as you like."
+  },
+  "seated.first": {
+   "file": "seated.first.m4a",
+   "bytes": 19454,
+   "sha256": "e159ec75957df49914762c4351c36e85941fa36d73eb2bc1d186b3ca44ab10b2",
+   "seconds": 3.15,
+   "text": "Let's begin with easy seat."
+  },
+  "seated.next": {
+   "file": "seated.next.m4a",
+   "bytes": 16256,
+   "sha256": "00e15980df9b603363882147530a61bafd63ebebe8bcfc677d307ab71f8f8c8e",
+   "seconds": 2.62,
+   "text": "Next, easy seat."
+  },
+  "seated.now": {
+   "file": "seated.now.m4a",
+   "bytes": 15124,
+   "sha256": "3537c9a2fc97911c1144b49bfe1ebe52c2abe0328947e0749c61e8aa2dcb8943",
+   "seconds": 2.52,
+   "text": "Now, easy seat."
+  },
+  "seated.enter": {
+   "file": "seated.enter.m4a",
+   "bytes": 65012,
+   "sha256": "c44b8b7152a0e193de56151f45ef4097a1b3a223af2fa3df9c981a80a8111f76",
+   "seconds": 10.1,
+   "text": "Easy seat. Come down to sit on your mat and cross your legs comfortably. A cushion under your hips can help."
+  },
+  "seated.hold": {
+   "file": "seated.hold.m4a",
+   "bytes": 47245,
+   "sha256": "baa5b5fddd4c8e54ac16584b9ca7817cbcc0a2cc207013bef0300ffa084fac05",
+   "seconds": 7.63,
+   "text": "Lengthen through your spine and rest your hands on your knees. Let each breath slow down."
+  },
+  "child.first": {
+   "file": "child.first.m4a",
+   "bytes": 20251,
+   "sha256": "f37b47491fd9bd90f08867036a7232a7c11d736b98579a3873b7c69d990d021f",
+   "seconds": 3.25,
+   "text": "Let's begin with child's pose."
+  },
+  "child.next": {
+   "file": "child.next.m4a",
+   "bytes": 17217,
+   "sha256": "83ae3603cd370ff523e45ee064105146fc89066604e1090e38a0d76818613a8f",
+   "seconds": 2.82,
+   "text": "Next, child's pose."
+  },
+  "child.now": {
+   "file": "child.now.m4a",
+   "bytes": 16142,
+   "sha256": "454089f66b338bdbc7cec5691eabcd543179e2b98e68f6ae610e2c46cccaa8ec",
+   "seconds": 2.69,
+   "text": "Now, child's pose."
+  },
+  "child.enter": {
+   "file": "child.enter.m4a",
+   "bytes": 76089,
+   "sha256": "562a6e9d682ad7660c12e897f1e7194dc5497cdf29bc2328f1b141f10bacb015",
+   "seconds": 12.32,
+   "text": "Child's pose. Come onto your hands and knees. Sink your hips back toward your heels, and walk your hands forward as your forehead comes down to the mat."
+  },
+  "child.hold": {
+   "file": "child.hold.m4a",
+   "bytes": 39631,
+   "sha256": "a429e9745d027b5a8586a51fae7831cd8df4f7bff6542b157cfae431578b7161",
+   "seconds": 6.41,
+   "text": "Rest your forehead, on a cushion if you need one. Breathe into your back."
+  },
+  "rest.first": {
+   "file": "rest.first.m4a",
+   "bytes": 16642,
+   "sha256": "c080201d5b98669de65e77d38bbe4d4ded69269c1c90dfc9f21ade59bbc54254",
+   "seconds": 2.62,
+   "text": "Let's begin with rest."
+  },
+  "rest.next": {
+   "file": "rest.next.m4a",
+   "bytes": 12646,
+   "sha256": "bebb1d023e06e8688c5f552e8e1cc2979a42f263b7444a85f3108698fdaa1a97",
+   "seconds": 2.07,
+   "text": "Next, rest."
+  },
+  "rest.now": {
+   "file": "rest.now.m4a",
+   "bytes": 12025,
+   "sha256": "0c2b1718a087d3b5daa4f86ccb6e6e5c6384b94d13426178262667da0bc196ef",
+   "seconds": 2.02,
+   "text": "Now, rest."
+  },
+  "rest.enter": {
+   "file": "rest.enter.m4a",
+   "bytes": 66094,
+   "sha256": "3de4ac11a4e7443e7da303665821fe2c7dde663f7fce50e83629d824a67c89ac",
+   "seconds": 10.8,
+   "text": "Rest. Lie down on your back. Let your legs stretch out, and rest your arms a little away from your body, palms facing up."
+  },
+  "rest.hold": {
+   "file": "rest.hold.m4a",
+   "bytes": 39073,
+   "sha256": "02dd27c86f0963290e124a7079b6d052523afcad3927f756c554ce81bb96a968",
+   "seconds": 6.31,
+   "text": "Let your whole body feel heavy. There's nothing to do now but breathe."
+  },
+  "lunge-left.first": {
+   "file": "lunge-left.first.m4a",
+   "bytes": 23183,
+   "sha256": "7ee5ddd89130d0300b6e116aac354042302a4e5caa8b860209ff329765545e7c",
+   "seconds": 3.65,
+   "text": "Let's begin with low lunge, left side."
+  },
+  "lunge-left.next": {
+   "file": "lunge-left.next.m4a",
+   "bytes": 19104,
+   "sha256": "62571d8ac916c6e6f967b04bc6fdf2c5c89176b598fed26e3ea188aaa36bd41e",
+   "seconds": 3.1,
+   "text": "Next, low lunge, left side."
+  },
+  "lunge-left.now": {
+   "file": "lunge-left.now.m4a",
+   "bytes": 18495,
+   "sha256": "b4b51d983f4fabb5826bed3d3958142e41f3f959e60f6da75a12359b6e672765",
+   "seconds": 3.04,
+   "text": "Now, low lunge, left side."
+  },
+  "lunge-left.enter": {
+   "file": "lunge-left.enter.m4a",
+   "bytes": 77235,
+   "sha256": "ceda001e81fbfeea6108516eee8ac29063634e010befc184436fe89ceacd621d",
+   "seconds": 12.53,
+   "text": "Low lunge, left side. Step your left foot forward between your hands, and lower your right knee onto the mat, with some padding if you like. Lift your chest."
+  },
+  "lunge-left.hold": {
+   "file": "lunge-left.hold.m4a",
+   "bytes": 46768,
+   "sha256": "54182b8c4baff7cf8bf2b4a70024264db89bbe66f402e2550cff83d2c3f3643a",
+   "seconds": 7.38,
+   "text": "Let your hips sink gently forward. Keep your front knee above your ankle, and breathe."
+  },
+  "lunge-right.first": {
+   "file": "lunge-right.first.m4a",
+   "bytes": 22929,
+   "sha256": "d32884073de785e61a831ce885700f268e7116b317b102b6e7b10353032b66c2",
+   "seconds": 3.67,
+   "text": "Let's begin with low lunge, right side."
+  },
+  "lunge-right.next": {
+   "file": "lunge-right.next.m4a",
+   "bytes": 19018,
+   "sha256": "e544bc728f3d1f0f25befead7f28fd56e743f16c7d6413d374f0bdf2cd7dd225",
+   "seconds": 3.1,
+   "text": "Next, low lunge, right side."
+  },
+  "lunge-right.now": {
+   "file": "lunge-right.now.m4a",
+   "bytes": 18739,
+   "sha256": "5831493ab3625f295ed973c3d45bd036d95cb3bd30db3aa582fc975b1e5837f5",
+   "seconds": 3.1,
+   "text": "Now, low lunge, right side."
+  },
+  "lunge-right.enter": {
+   "file": "lunge-right.enter.m4a",
+   "bytes": 76624,
+   "sha256": "ebd10baf96d31a0a7681f33b60e1439b76f3f10c5ed2668d586c7caf90d95bfb",
+   "seconds": 12.45,
+   "text": "Low lunge, right side. Step your right foot forward between your hands, and lower your left knee onto the mat, with some padding if you like. Lift your chest."
+  },
+  "lunge-right.hold": {
+   "file": "lunge-right.hold.m4a",
+   "bytes": 46653,
+   "sha256": "bcbe79164646386a73d10621a77e0666abac6ab32224113b4fecba9e7f47958d",
+   "seconds": 7.38,
+   "text": "Let your hips sink gently forward. Keep your front knee above your ankle, and breathe."
+  },
+  "warrior-left.first": {
+   "file": "warrior-left.first.m4a",
+   "bytes": 23034,
+   "sha256": "fdcc99d156134bdda7be31694f9eb3ed11b5a1c8db1b30be675d4d74f9cabbb9",
+   "seconds": 3.67,
+   "text": "Let's begin with warrior two, left side."
+  },
+  "warrior-left.next": {
+   "file": "warrior-left.next.m4a",
+   "bytes": 20543,
+   "sha256": "06066887d94a9f15da558b07262d9a14c98d261dc2c57373cb7f2c2e1f03b344",
+   "seconds": 3.27,
+   "text": "Next, warrior two, left side."
+  },
+  "warrior-left.now": {
+   "file": "warrior-left.now.m4a",
+   "bytes": 19585,
+   "sha256": "d5f446db930e14827f590d6b41e4c4cbf5e0ec9e2d7236739a61f0631b9d13ea",
+   "seconds": 3.19,
+   "text": "Now, warrior two, left side."
+  },
+  "warrior-left.enter": {
+   "file": "warrior-left.enter.m4a",
+   "bytes": 95477,
+   "sha256": "08e6c9e5ef67f14ef9446273856f50f277620ece55f97b37b94210c4c5316091",
+   "seconds": 15.12,
+   "text": "Warrior two, left side. Step your feet wide apart. Turn your left foot out and bend your left knee over your ankle. Stretch both arms out wide, and look past your left hand."
+  },
+  "warrior-left.hold": {
+   "file": "warrior-left.hold.m4a",
+   "bytes": 48451,
+   "sha256": "68b040e7c9cc2fbcb2d74dd54782999eeb4b1cf46e288305a89fa2d4494ff4dd",
+   "seconds": 7.66,
+   "text": "Press into the outer edge of your back foot. Keep your shoulders relaxed, and breathe steadily."
+  },
+  "warrior-right.first": {
+   "file": "warrior-right.first.m4a",
+   "bytes": 23279,
+   "sha256": "6fc12eb93c5746ad4a843fffe6d5ec4ea76f2e667162fdc3eb00f9219538032b",
+   "seconds": 3.69,
+   "text": "Let's begin with warrior two, right side."
+  },
+  "warrior-right.next": {
+   "file": "warrior-right.next.m4a",
+   "bytes": 20985,
+   "sha256": "6965f5fd36e11955c6d7b34a74e98df70255b500b1ffecf8e5daef13c108cafd",
+   "seconds": 3.32,
+   "text": "Next, warrior two, right side."
+  },
+  "warrior-right.now": {
+   "file": "warrior-right.now.m4a",
+   "bytes": 21029,
+   "sha256": "ebf99aaca828e85226ce124e1937724856af636e75fa23caf506b279d4c98a7e",
+   "seconds": 3.22,
+   "text": "Now, warrior two, right side."
+  },
+  "warrior-right.enter": {
+   "file": "warrior-right.enter.m4a",
+   "bytes": 97881,
+   "sha256": "6f7516c0d88beceb162ecfe589f2043aa4474020ca401e24bbbde54d50db46ef",
+   "seconds": 15.49,
+   "text": "Warrior two, right side. Step your feet wide apart. Turn your right foot out and bend your right knee over your ankle. Stretch both arms out wide, and look past your right hand."
+  },
+  "warrior-right.hold": {
+   "file": "warrior-right.hold.m4a",
+   "bytes": 49994,
+   "sha256": "62a5c239f51101700d1f5dc5f753fb4a6daa935cf0796c61abb44b7c10289288",
+   "seconds": 7.66,
+   "text": "Press into the outer edge of your back foot. Keep your shoulders relaxed, and breathe steadily."
+  },
+  "triangle-left.first": {
+   "file": "triangle-left.first.m4a",
+   "bytes": 27003,
+   "sha256": "a2094d4aeaa0698fdad5cc30768b082d8a0f5d076bbd4e8de4aac2098455be03",
+   "seconds": 4.07,
+   "text": "Let's begin with triangle pose, left side."
+  },
+  "triangle-left.next": {
+   "file": "triangle-left.next.m4a",
+   "bytes": 22705,
+   "sha256": "02f07e35fc174f9cdfb27892153382a75149eb8e7537fd53f0254e3f407b1b69",
+   "seconds": 3.6,
+   "text": "Next, triangle pose, left side."
+  },
+  "triangle-left.now": {
+   "file": "triangle-left.now.m4a",
+   "bytes": 21863,
+   "sha256": "d8463b698f6218c956b8616ffc9f98300638c91ddf0921fc08d412a2f2fec739",
+   "seconds": 3.52,
+   "text": "Now, triangle pose, left side."
+  },
+  "triangle-left.enter": {
+   "file": "triangle-left.enter.m4a",
+   "bytes": 103371,
+   "sha256": "28c2ac35d6a18138411f164b5ffa86e67c4cfe36fa298e4353c1e719de49378b",
+   "seconds": 16.1,
+   "text": "Triangle pose, left side. With your feet wide, turn your left foot out and straighten both legs. Reach forward over your left leg, rest your lower hand on your shin or a block, and lift your other arm toward the sky."
+  },
+  "triangle-left.hold": {
+   "file": "triangle-left.hold.m4a",
+   "bytes": 45686,
+   "sha256": "a5f0665914eb16307c506285378d3593357864ae2dba12ddb473d63789180790",
+   "seconds": 6.93,
+   "text": "Keep both sides of your waist long. Look up only if your neck feels comfortable."
+  },
+  "triangle-right.first": {
+   "file": "triangle-right.first.m4a",
+   "bytes": 25738,
+   "sha256": "b53e5e6820a30b9f737c3f6857edaa509e06c31a38be3bbdce3ba88daa0da7bf",
+   "seconds": 4.02,
+   "text": "Let's begin with triangle pose, right side."
+  },
+  "triangle-right.next": {
+   "file": "triangle-right.next.m4a",
+   "bytes": 22659,
+   "sha256": "c5d6f899464eaf283496315604b3fdc6bf19a205def60463aac72ab37133d75e",
+   "seconds": 3.57,
+   "text": "Next, triangle pose, right side."
+  },
+  "triangle-right.now": {
+   "file": "triangle-right.now.m4a",
+   "bytes": 21442,
+   "sha256": "873f716d8a8f38d41b5fad86d5707c8cee55794429b1676061a7ade12ed531a9",
+   "seconds": 3.47,
+   "text": "Now, triangle pose, right side."
+  },
+  "triangle-right.enter": {
+   "file": "triangle-right.enter.m4a",
+   "bytes": 102845,
+   "sha256": "a9b3729b367d47da3327466ec7508e16004eb74ea52097ce0d60860ce724ba87",
+   "seconds": 16.2,
+   "text": "Triangle pose, right side. With your feet wide, turn your right foot out and straighten both legs. Reach forward over your right leg, rest your lower hand on your shin or a block, and lift your other arm toward the sky."
+  },
+  "triangle-right.hold": {
+   "file": "triangle-right.hold.m4a",
+   "bytes": 47063,
+   "sha256": "a9088d974082eeb4495cf75f58ce2f51d7a6395b2f2c8b8f2243ad9f64269b5e",
+   "seconds": 6.93,
+   "text": "Keep both sides of your waist long. Look up only if your neck feels comfortable."
+  },
+  "chair.first": {
+   "file": "chair.first.m4a",
+   "bytes": 19921,
+   "sha256": "2080a48fe4e58bdffdbbcbf5a224be10b7054b12fb9ba6bcf389f83cf0b2b1f6",
+   "seconds": 3.15,
+   "text": "Let's begin with chair pose."
+  },
+  "chair.next": {
+   "file": "chair.next.m4a",
+   "bytes": 16238,
+   "sha256": "6437fe5c5da587126972422615259efed2a770a5e71b723a2ccc59e0a81a8814",
+   "seconds": 2.65,
+   "text": "Next, chair pose."
+  },
+  "chair.now": {
+   "file": "chair.now.m4a",
+   "bytes": 15942,
+   "sha256": "30059c03e39a47a136ef7cbd70763aa8e47485a4d1f04097251bbff9a2a4680e",
+   "seconds": 2.6,
+   "text": "Now, chair pose."
+  },
+  "chair.enter": {
+   "file": "chair.enter.m4a",
+   "bytes": 68041,
+   "sha256": "73ba27ca43ee539ac6075fc61a23d9dd45cb8498726ba099d59f8fc5a810bf7d",
+   "seconds": 10.9,
+   "text": "Chair pose. Bend your knees and sit your hips back, as if lowering onto a chair. Raise your arms alongside your ears."
+  },
+  "chair.hold": {
+   "file": "chair.hold.m4a",
+   "bytes": 40767,
+   "sha256": "fe66e992d34739dd5d2ccf5204fb7a4db24587aed12b80904295e6f0257f52d0",
+   "seconds": 6.41,
+   "text": "Keep your weight in your heels and your chest lifting. Breathe steadily."
+  },
+  "tree-left.first": {
+   "file": "tree-left.first.m4a",
+   "bytes": 23166,
+   "sha256": "d864a17d383341462c67e8bd916b42bd387a2f0cb5eb22d4c56afc3fdd49faec",
+   "seconds": 3.67,
+   "text": "Let's begin with low tree, left side."
+  },
+  "tree-left.next": {
+   "file": "tree-left.next.m4a",
+   "bytes": 19741,
+   "sha256": "9f4d3f93727decbea32f04ca9c2cbc3e98323343d9d0498c8913a05320498793",
+   "seconds": 3.15,
+   "text": "Next, low tree, left side."
+  },
+  "tree-left.now": {
+   "file": "tree-left.now.m4a",
+   "bytes": 19437,
+   "sha256": "68527640375c6db156ff8f7cc22bccb225bc7318c32d02822b997a243d739f34",
+   "seconds": 3.1,
+   "text": "Now, low tree, left side."
+  },
+  "tree-left.enter": {
+   "file": "tree-left.enter.m4a",
+   "bytes": 96778,
+   "sha256": "14309e12933e92279bc86c1d67ccdbff76374915fd173782369359716595c4c3",
+   "seconds": 15.27,
+   "text": "Low tree, left side. Shift your weight onto your left foot. Turn your right knee out and rest that heel against your left ankle, toes on the mat. Bring your palms together at your heart."
+  },
+  "tree-left.hold": {
+   "file": "tree-left.hold.m4a",
+   "bytes": 54406,
+   "sha256": "533a137a9e8da55fdb7363cafe69bbbb4cf2baf0857d60801f3fe77a2e695662",
+   "seconds": 8.72,
+   "text": "Find a still point to look at. A wall nearby can help with balance. Breathe calmly."
+  },
+  "tree-right.first": {
+   "file": "tree-right.first.m4a",
+   "bytes": 23171,
+   "sha256": "a0dbe10e3aa1bdfe4b6f739dd3e0d53e951deff9eb032f2e9017232a03d45244",
+   "seconds": 3.69,
+   "text": "Let's begin with low tree, right side."
+  },
+  "tree-right.next": {
+   "file": "tree-right.next.m4a",
+   "bytes": 19542,
+   "sha256": "45866f2d5de643478e1e1d8da74ae78e037683fa5f7966be3157b31aa1b7f7a6",
+   "seconds": 3.15,
+   "text": "Next, low tree, right side."
+  },
+  "tree-right.now": {
+   "file": "tree-right.now.m4a",
+   "bytes": 19094,
+   "sha256": "26648fcb630492451a706fe0e2facdd64db12422b888c244fcf34716550e64bb",
+   "seconds": 3.12,
+   "text": "Now, low tree, right side."
+  },
+  "tree-right.enter": {
+   "file": "tree-right.enter.m4a",
+   "bytes": 98207,
+   "sha256": "8c6f40692d27e618a4e2403bc3e2d3b428596d4411d5d0d82e01e67c2fee5922",
+   "seconds": 15.41,
+   "text": "Low tree, right side. Shift your weight onto your right foot. Turn your left knee out and rest that heel against your right ankle, toes on the mat. Bring your palms together at your heart."
+  },
+  "tree-right.hold": {
+   "file": "tree-right.hold.m4a",
+   "bytes": 54351,
+   "sha256": "2c9ce07caccbcfdf99c6e181b4c90e9da26cfc28325a8f26c3e8b026bb5c88a9",
+   "seconds": 8.72,
+   "text": "Find a still point to look at. A wall nearby can help with balance. Breathe calmly."
+  },
+  "sidebend-left.first": {
+   "file": "sidebend-left.first.m4a",
+   "bytes": 26053,
+   "sha256": "41a4a1e4fac9827582c3f09d906f92333311b701ce8843cd15437fc3ca72286a",
+   "seconds": 4.14,
+   "text": "Let's begin with seated side bend, left side."
+  },
+  "sidebend-left.next": {
+   "file": "sidebend-left.next.m4a",
+   "bytes": 22653,
+   "sha256": "0f6c9a40ac41671d222c6a48047e18b58b2d2b2deedceb45bad3f92ef6049893",
+   "seconds": 3.62,
+   "text": "Next, seated side bend, left side."
+  },
+  "sidebend-left.now": {
+   "file": "sidebend-left.now.m4a",
+   "bytes": 23614,
+   "sha256": "384aa3dc187975a78b229b36a0594e7c2052f91d2a6098556992c0dac93db611",
+   "seconds": 3.67,
+   "text": "Now, seated side bend, left side."
+  },
+  "sidebend-left.enter": {
+   "file": "sidebend-left.enter.m4a",
+   "bytes": 82518,
+   "sha256": "2cbb6427a2f44665d9c127b9350b728899442ee57fbea856a360178b32a85741",
+   "seconds": 13.05,
+   "text": "Seated side bend, left side. Sit tall with your legs crossed. Place your left hand on the mat beside you, sweep your right arm up, and lean gently to the left."
+  },
+  "sidebend-left.hold": {
+   "file": "sidebend-left.hold.m4a",
+   "bytes": 42698,
+   "sha256": "f86d32cf49c9022f41ec337f36748068a495338598191f086f33bb8abc0e837e",
+   "seconds": 6.66,
+   "text": "Keep both sitting bones grounded. Breathe into the long side of your body."
+  },
+  "sidebend-right.first": {
+   "file": "sidebend-right.first.m4a",
+   "bytes": 27997,
+   "sha256": "4728740d55bd3206469caa26db8ce4237af3db41ac0e205796d521a8248c5ed3",
+   "seconds": 4.09,
+   "text": "Let's begin with seated side bend, right side."
+  },
+  "sidebend-right.next": {
+   "file": "sidebend-right.next.m4a",
+   "bytes": 23005,
+   "sha256": "2ad5ec6a12e56cd0adffcb9c12cd127cd8d29ad0f15f441c4352d94c8ff80a51",
+   "seconds": 3.67,
+   "text": "Next, seated side bend, right side."
+  },
+  "sidebend-right.now": {
+   "file": "sidebend-right.now.m4a",
+   "bytes": 22819,
+   "sha256": "eeb369033ac209ef57a015f6f3766016467dfcb95396e246d727a579f158fbae",
+   "seconds": 3.67,
+   "text": "Now, seated side bend, right side."
+  },
+  "sidebend-right.enter": {
+   "file": "sidebend-right.enter.m4a",
+   "bytes": 83666,
+   "sha256": "50b2fa50c12d66ebca5f45e41065a0e2b38b084c8489455e4d40363ec8d2fdef",
+   "seconds": 13.03,
+   "text": "Seated side bend, right side. Sit tall with your legs crossed. Place your right hand on the mat beside you, sweep your left arm up, and lean gently to the right."
+  },
+  "sidebend-right.hold": {
+   "file": "sidebend-right.hold.m4a",
+   "bytes": 42553,
+   "sha256": "0c185e77c46e7e9aefda39a4f6ca11977c14cd0d883d2cd61f8f40a350cafb25",
+   "seconds": 6.66,
+   "text": "Keep both sitting bones grounded. Breathe into the long side of your body."
+  },
+  "butterfly.first": {
+   "file": "butterfly.first.m4a",
+   "bytes": 21006,
+   "sha256": "48c7064fd5c38ddd277d4af7195d0e0def44239389bf6b8b75633f783d0fe1e5",
+   "seconds": 3.35,
+   "text": "Let's begin with butterfly seat."
+  },
+  "butterfly.next": {
+   "file": "butterfly.next.m4a",
+   "bytes": 18337,
+   "sha256": "ed4ef37182b293dda68514642d4f10230425d81dbbfafbf6f5839b57abd229c7",
+   "seconds": 2.85,
+   "text": "Next, butterfly seat."
+  },
+  "butterfly.now": {
+   "file": "butterfly.now.m4a",
+   "bytes": 17540,
+   "sha256": "a12bfaae85bfdc8951f3ef887d3c2b17794a841e3f5b4832d871c74a2db24009",
+   "seconds": 2.87,
+   "text": "Now, butterfly seat."
+  },
+  "butterfly.enter": {
+   "file": "butterfly.enter.m4a",
+   "bytes": 70140,
+   "sha256": "9dbd025678752d8056da37aaa5671e1ef2d72200c2bab386286095ed7bfea598",
+   "seconds": 11.22,
+   "text": "Butterfly seat. Sitting tall, bring the soles of your feet together and let your knees fall open. Hold your feet or ankles."
+  },
+  "butterfly.hold": {
+   "file": "butterfly.hold.m4a",
+   "bytes": 47137,
+   "sha256": "8e43426f836ca3eeecd935f49399d1d25cee66428562a9ae7a9c4f4442062310",
+   "seconds": 7.54,
+   "text": "Let your knees soften outward, with cushions underneath if you like. Breathe slowly."
+  },
+  "tabletop.first": {
+   "file": "tabletop.first.m4a",
+   "bytes": 19430,
+   "sha256": "7c78e389bfeb16b2cf494f34b994e48f4a1b37ad89e0ef40b53dde9f4a0e3d91",
+   "seconds": 3.1,
+   "text": "Let's begin with tabletop."
+  },
+  "tabletop.next": {
+   "file": "tabletop.next.m4a",
+   "bytes": 15256,
+   "sha256": "cb271d401bb8b03428b6a27c94720ccea440141c295f610dac6d1c710c160bca",
+   "seconds": 2.42,
+   "text": "Next, tabletop."
+  },
+  "tabletop.now": {
+   "file": "tabletop.now.m4a",
+   "bytes": 15591,
+   "sha256": "76a4d48265b6cb8ec0b6c2aa0aaa2b1793333a26f874883cb42ee9811ea852d0",
+   "seconds": 2.54,
+   "text": "Now, tabletop."
+  },
+  "tabletop.enter": {
+   "file": "tabletop.enter.m4a",
+   "bytes": 54191,
+   "sha256": "b431c0e5281865f485f03a119edd950726f059736eed0d84cb93e655d8941061",
+   "seconds": 8.51,
+   "text": "Tabletop. Come onto your hands and knees, with your hands under your shoulders and your knees under your hips."
+  },
+  "tabletop.hold": {
+   "file": "tabletop.hold.m4a",
+   "bytes": 38104,
+   "sha256": "f4b5acf1d177944432773c5e0519736829af459ae034f72e1eec451e8f8f49d7",
+   "seconds": 5.81,
+   "text": "Keep your neck long and your back level. Breathe evenly."
+  }
+ }
+}

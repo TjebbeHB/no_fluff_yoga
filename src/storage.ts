@@ -2,11 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
 import { poseLibrary, Routine } from "./routines";
 import { AmbientSound, SOUND_OPTIONS } from "./soundCatalog";
+import { GuideStyle } from "./guideScript";
+import { GuideVoice, isVoiceId } from "./voices";
 export type Preferences = {
   ambient: AmbientSound;
   ambientEnabled: boolean;
   chime: boolean;
-  speech: boolean;
+  // The audio guide talks you from pose to pose, also with the screen off.
+  guide: boolean;
+  guideStyle: GuideStyle;
+  voice: GuideVoice;
   // How the character looks: open smile, Breton stripes, hair in a bun.
   smile: boolean;
   stripes: boolean;
@@ -30,7 +35,9 @@ export const DEFAULT_STATE: LibraryState = {
     ambient: "rain",
     ambientEnabled: true,
     chime: true,
-    speech: false,
+    guide: false,
+    guideStyle: "detailed",
+    voice: "device",
     smile: true,
     stripes: true,
     bun: false,
@@ -81,7 +88,15 @@ export function decodeLibrary(raw: string | null): LibraryState {
       ambientEnabled:
         typeof p.ambientEnabled === "boolean" ? p.ambientEnabled : true,
       chime: typeof p.chime === "boolean" ? p.chime : true,
-      speech: typeof p.speech === "boolean" ? p.speech : false,
+      // Earlier versions only spoke move names: that is the brief guide now.
+      guide: typeof p.guide === "boolean" ? p.guide : p.speech === true,
+      guideStyle:
+        p.guideStyle === "brief" || p.guideStyle === "detailed"
+          ? p.guideStyle
+          : p.speech === true
+            ? "brief"
+            : "detailed",
+      voice: isVoiceId(p.voice) ? p.voice : "device",
       smile: typeof p.smile === "boolean" ? p.smile : true,
       stripes: typeof p.stripes === "boolean" ? p.stripes : true,
       bun: typeof p.bun === "boolean" ? p.bun : false,

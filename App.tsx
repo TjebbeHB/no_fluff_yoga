@@ -24,7 +24,7 @@ import Svg, { Path } from "react-native-svg";
 import { Illustration, LookContext, Sprig } from "./src/Illustration";
 import { usePracticeTimeline } from "./src/usePracticeTimeline";
 import { poseFrame, sampleMotion } from "./src/motion";
-import { useGuidance } from "./src/useGuidance";
+import { useAudioGuide } from "./src/useAudioGuide";
 import {
   useLibrary,
   materialize,
@@ -32,7 +32,7 @@ import {
   Preferences,
 } from "./src/storage";
 import { RoutineBuilder } from "./src/components/RoutineBuilder";
-import { SoundSettings } from "./src/components/SoundSettings";
+import { Settings } from "./src/components/Settings";
 import { ui } from "./src/components/design";
 import { SOUND_OPTIONS } from "./src/soundCatalog";
 import {
@@ -55,7 +55,15 @@ function Icon({
   size = 22,
   color = C.ink,
 }: {
-  kind: "back" | "play" | "pause" | "sound" | "mute" | "next" | "check";
+  kind:
+    | "back"
+    | "play"
+    | "pause"
+    | "sound"
+    | "mute"
+    | "next"
+    | "check"
+    | "settings";
   size?: number;
   color?: string;
 }) {
@@ -67,6 +75,8 @@ function Icon({
     mute: "M4 9h4l5-4v14l-5-4H4Zm13 0 5 6m0-6-5 6",
     next: "M6 5l10 7-10 7ZM19 5v14",
     check: "m5 12 4 4L19 6",
+    settings:
+      "M4 7h9m4 0h3M4 17h3m4 0h9M17 7a2 2 0 1 1-4 0a2 2 0 1 1 4 0M11 17a2 2 0 1 1-4 0a2 2 0 1 1 4 0",
   }[kind];
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24">
@@ -164,7 +174,17 @@ export default function App() {
                       <Sprig size={25} color={C.ink} />
                       <Text style={s.wordmark}>verdant</Text>
                     </View>
-                    <Text style={s.eyebrow}>A LITTLE SPACE FOR YOU</Text>
+                    <View style={s.brandName}>
+                      <Text style={s.eyebrow}>A LITTLE SPACE FOR YOU</Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel="Settings"
+                        onPress={() => setSettings(true)}
+                        style={s.iconButton}
+                      >
+                        <Icon kind="settings" />
+                      </Pressable>
+                    </View>
                   </View>
                   <View style={s.headingRow}>
                     <View>
@@ -179,10 +199,13 @@ export default function App() {
                     <Text style={s.eyebrow}>FIND YOUR FLOW</Text>
                     <Pressable
                       accessibilityRole="button"
+                      accessibilityLabel={`Audio guide ${preferences.guide ? "on" : "off"}. Open settings`}
                       onPress={() => setSettings(true)}
                       style={ui.textButton}
                     >
-                      <Text style={ui.link}>Sound & guidance</Text>
+                      <Text style={ui.link}>
+                        Audio guide {preferences.guide ? "on" : "off"}
+                      </Text>
                     </Pressable>
                   </View>
                   <View
@@ -379,7 +402,7 @@ export default function App() {
               </View>
             )}
             {settings && (
-              <SoundSettings
+              <Settings
                 preferences={preferences}
                 onChange={changePreferences}
                 onClose={() => setSettings(false)}
@@ -445,7 +468,10 @@ function Practice({
   onExit: () => void;
   onComplete: (seconds: number) => void;
 }) {
+  const guided = preferences.guide;
+  // The screen stays on, unless the audio guide is leading the practice.
   useEffect(() => {
+    if (guided) return;
     let disposed = false;
     let acquired = false;
     const tag = `practice-${Date.now()}`;
@@ -462,25 +488,28 @@ function Practice({
       disposed = true;
       if (acquired) release();
     };
-  }, []);
+  }, [guided]);
   const [paused, setPaused] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
 
   const finished = useRef(false);
   const timeline = usePracticeTimeline(routine, paused);
   const { state } = timeline;
-  const pose = routine.poses[state.index],
-    next = routine.poses[state.index + 1];
+  const complete = state.phase === "complete";
+  // The last pose stays on screen while the closing words play.
+  const pose = routine.poses[Math.min(state.index, routine.poses.length - 1)],
+    next = complete ? undefined : routine.poses[state.index + 1];
   const changing = state.phase === "move" || state.phase === "reposition";
   const completedHolds = routine.poses
     .slice(0, state.index)
     .reduce((sum, p) => sum + p.seconds, 0);
   const elapsed = completedHolds + (state.phase === "hold" ? state.time : 0);
   const position = {
-    index: state.index,
-    remaining: pose
-      ? Math.ceil(pose.seconds - (state.phase === "hold" ? state.time : 0))
-      : 0,
+    index: Math.min(state.index, routine.poses.length - 1),
+    remaining:
+      pose && !complete
+        ? Math.ceil(pose.seconds - (state.phase === "hold" ? state.time : 0))
+        : 0,
   };
   const total = totalSeconds(routine);
   const sound = preferences.ambientEnabled;
@@ -489,29 +518,41 @@ function Practice({
       ? sampleMotion(state.plan, state.time)
       : poseFrame(pose)
     : undefined;
-  const sessionId = useRef(`session-${Date.now()}`);
-  const guidance = useGuidance({
-    poseKey: `${sessionId.current}:${position.index}`,
-    text: pose ? `${pose.name}${pose.side ? `, ${pose.side} side` : ""}` : "",
-    active: !paused && !!pose && state.phase === "hold",
+  const title = pose
+    ? `${pose.name}${pose.side ? `, ${pose.side} side` : ""}`
+    : "";
+  const guide = useAudioGuide({
+    routine,
+    state,
+    paused,
+    enabled: guided,
+    style: preferences.guideStyle,
+    voice: preferences.voice,
     chime: preferences.chime,
-    speech: preferences.speech,
-  });
-  const ambient = useAmbientAudio(
-    sound && !paused,
-    preferences.ambient,
-    guidance.ducking,
-  );
-  useEffect(() => {
-    if (state.phase === "complete" && !finished.current) {
+    onReady: timeline.ready,
+    // Straight away without the guide; after its closing words with it.
+    onFinished: () => {
+      if (finished.current) return;
       finished.current = true;
       ambient.stop();
       onComplete(state.activeSeconds);
-    }
-  }, [state.phase, state.activeSeconds, onComplete, ambient.stop]);
+    },
+  });
+  const ambient = useAmbientAudio({
+    soundOn: sound,
+    sound: preferences.ambient,
+    active: !paused,
+    ducking: guide.speaking,
+    background: guided,
+    nowPlaying: { title, artist: routine.name },
+    onRemote: (playing) => setPaused(!playing),
+  });
+  const guidedNow = useRef(guided);
+  guidedNow.current = guided;
   useEffect(() => {
+    // With the audio guide on, practice carries on with the screen off.
     const sub = AppState.addEventListener("change", (state) => {
-      if (state !== "active") setPaused(true);
+      if (state !== "active" && !guidedNow.current) setPaused(true);
     });
     const back = BackHandler.addEventListener("hardwareBackPress", () => {
       setPaused(true);
@@ -519,7 +560,7 @@ function Practice({
       return true;
     });
     const handleVisibility = () => {
-      if (document.hidden) setPaused(true);
+      if (document.hidden && !guidedNow.current) setPaused(true);
     };
     if (Platform.OS === "web")
       document.addEventListener("visibilitychange", handleVisibility);
@@ -531,10 +572,8 @@ function Practice({
     };
   }, []);
   useEffect(() => {
-    if (pose && !preferences.speech && !paused && state.phase === "hold")
-      AccessibilityInfo.announceForAccessibility(
-        `${pose.name}${pose.side ? `, ${pose.side} side` : ""}. ${pose.cue}`,
-      );
+    if (pose && !guided && !paused && state.phase === "hold")
+      AccessibilityInfo.announceForAccessibility(`${title}. ${pose.cue}`);
   }, [position.index, state.phase]);
   if (!pose) return <View />;
   return (
@@ -562,7 +601,9 @@ function Practice({
         </View>
         <View style={s.poseHeading}>
           <Text style={s.eyebrow}>
-            {paused
+            {complete
+              ? "WELL DONE"
+              : paused
               ? "A MOMENT TO PAUSE"
               : changing
                 ? "CHANGE POSITION"
@@ -578,7 +619,9 @@ function Practice({
           <View style={s.breathePill}>
             <View style={[s.dot, paused && { backgroundColor: "#A7AC9E" }]} />
             <Text style={s.small}>
-              {paused
+              {complete
+                ? "Rest here a moment"
+                : paused
                 ? "Paused"
                 : state.phase === "move"
                   ? "Moving into position"
@@ -592,7 +635,9 @@ function Practice({
           {state.phase === "move"
             ? frame?.label || state.plan?.label
             : state.phase === "reposition"
-              ? "Change to the illustrated position at your own pace. Tap when you are ready."
+              ? guided
+                ? "Change to the illustrated position at your own pace. The hold begins on its own after a moment, or tap when you are ready."
+                : "Change to the illustrated position at your own pace. Tap when you are ready."
               : pose.cue}
         </Text>
         {state.phase === "reposition" && (
@@ -616,9 +661,15 @@ function Practice({
             Move within comfort · take extra time when needed
           </Text>
         )}
-        {guidance.speechStatus && (
+        {guided && (
+          <Text style={[s.small, { textAlign: "center", marginTop: 6 }]}>
+            Audio guide on · you can lock your screen
+          </Text>
+        )}
+        {guided && guide.problem && (
           <Text style={[ui.error, { textAlign: "center" }]}>
-            {guidance.speechStatus}
+            The voice isn’t responding. Check your device’s text-to-speech
+            settings, or install a Paradee voice in Settings.
           </Text>
         )}
         <Text
@@ -628,7 +679,9 @@ function Practice({
           {formatTime(position.remaining)}
         </Text>
         <Text style={s.timerCaption}>
-          {paused
+          {complete
+            ? "practice complete"
+            : paused
             ? "paused · resume when you’re ready"
             : changing
               ? "hold starts once you’re in position"
@@ -715,14 +768,14 @@ function Practice({
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Sound & guidance"
-          style={ui.textButton}
+          accessibilityLabel="Settings"
+          style={s.iconButton}
           onPress={() => {
             setPaused(true);
             onOpenSettings();
           }}
         >
-          <Text style={ui.link}>Tune</Text>
+          <Icon kind="settings" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
