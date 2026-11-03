@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
-import { poseLibrary, Routine } from "./routines";
+import { NAME_LIMIT, poseLibrary, Routine, Step } from "./routines";
 import { AmbientSound, SOUND_OPTIONS } from "./soundCatalog";
 import { GuideStyle } from "./guideScript";
 import { GuideVoice, isVoiceId } from "./voices";
@@ -20,7 +20,7 @@ export type Preferences = {
 export type SavedRoutine = {
   id: string;
   name: string;
-  steps: { poseId: string; seconds: number }[];
+  steps: Step[];
 };
 export type LibraryState = {
   version: 1;
@@ -51,7 +51,7 @@ export function validRoutine(value: unknown): value is SavedRoutine {
     r.id.startsWith("custom-") &&
     typeof r.name === "string" &&
     r.name.trim().length > 0 &&
-    r.name.length <= 40 &&
+    r.name.length <= NAME_LIMIT &&
     Array.isArray(r.steps) &&
     r.steps.length > 0 &&
     r.steps.length <= 30 &&
@@ -103,6 +103,8 @@ export function decodeLibrary(raw: string | null): LibraryState {
     },
   };
 }
+export const newRoutineId = () =>
+  `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 export function materialize(saved: SavedRoutine): Routine {
   const poses = saved.steps.map((step) => ({
     ...poseLibrary.find((p) => p.id === step.poseId)!,

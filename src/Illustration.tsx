@@ -22,30 +22,6 @@ import {
   pt,
   torsoArt,
 } from "./figure";
-export function Sprig({
-  size = 52,
-  color = "#8C9779",
-}: {
-  size?: number;
-  color?: string;
-}) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 70 70">
-      <Path
-        d="M14 62 Q45 40 53 7"
-        fill="none"
-        stroke={color}
-        strokeWidth="1.5"
-      />
-      {[0, 1, 2, 3].map((i) => (
-        <G key={i} transform={`translate(${i * 9} ${-i * 13})`}>
-          <Path d="M24 52 Q4 48 10 31 Q25 34 24 52" fill={color} />
-          <Path d="M24 52 Q46 53 47 36 Q31 35 24 52" fill={color} />
-        </G>
-      ))}
-    </Svg>
-  );
-}
 const flat = (p: number[]): Vec => [p[0], p[1]];
 const lerp = (a: Vec, b: Vec, t: number): Vec => [
   a[0] + (b[0] - a[0]) * t,

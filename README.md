@@ -4,19 +4,29 @@
 
 A low-distraction way to take a break, stretch, and relax. Pick a routine or build your own, follow the illustrated poses or let a calm voice guide you with your screen off, and keep the sound as simple as you like. No ads, accounts, subscriptions, or social feed.
 
-![Verdant Yoga: illustrated practice, custom routine builder, and sound settings](docs/images/verdant-yoga.png)
+![Verdant Yoga: the home screen, an illustrated practice and the routine builder](docs/images/verdant-yoga.png)
 
 ## What it does
 
 - **Six ready-made routines:** Morning flow (10 min), Gentle stretch (15 min), Evening unwind (12 min), Find your balance (6 min), Seated softness (7 min), and A little reset (5 min).
-- **Build your own:** choose from 19 moves, including left/right variants; reorder or repeat them; set holds from 15 to 180 seconds. Save, edit, and delete routines on your device, with up to 30 moves per routine.
-- **Follow your practice:** illustrated target poses, short text cues, side labels, a countdown, overall progress, and a preview of the next move. Pause, skip, or stop at any time.
+- **See every move first:** tap **Moves** on the selected routine for its whole sequence, in order, with each hold time, and begin from there.
+- **Build your own:** choose from 19 moves; add a move for the left side, the right side or both in one tap; reorder or repeat moves; set holds from 15 to 180 seconds. Up to 30 moves per routine.
+- **Make a ready-made routine yours:** **Customize** copies it into the builder to change, then saves it under **My routines**. Saved routines can be edited, duplicated and deleted on your device.
+- **Follow your practice:** illustrated target poses, short text cues, side labels, a countdown, a progress bar with one segment per move, and a preview of the next move. Pause, skip, or stop at any time; when you finish, see how long you practised and start again with one tap.
 - **Audio guide:** a voice leads you from pose to pose, so you can practise with your screen off. Choose **Detailed** guidance, which describes how to move into each pose and what to notice while holding it, or **Brief** guidance, which only names the next move ("Next, warrior two, right side."). Use your device's own voice, or install a natural-sounding [Paradee](https://github.com/sahilmahendrakar/paradee) voice with one tap.
 - **Choose your sound:** real rain, forest birds, or a quiet stream, and an optional soft bell when it's time to change pose.
 - **Keep interruptions down:** without the audio guide, practice pauses when the app goes into the background. Nature sounds become quieter while the guide speaks. Reduced Motion is supported.
 - **One settings screen:** the audio guide, voices, sound and the character's look are all under **Settings** (the sliders icon on the home screen and during practice), separate from the routine builder.
 
-Built with Expo SDK 57, React Native, and TypeScript for Android, iOS, and web. The ivory/sage interface uses original SVG illustrations of one recurring character across 14 pose shapes: long, warm-brown hair with curtain bangs, freckles, rosy cheeks, green eyes, small silver hoops, a cream-and-green Breton tee and blue leggings. Under **Settings → Character** you can switch off the open smile (for a softer closed one), swap the stripes for a plain green sports shirt, and put her hair up in a bun.
+Built with Expo SDK 57, React Native, and TypeScript for Android, iOS, and web. The ivory and forest-green interface uses original SVG illustrations of one recurring character across 14 pose shapes: long, warm-brown hair with curtain bangs, freckles, rosy cheeks, green eyes, small silver hoops, a cream-and-green Breton tee and blue leggings. Under **Settings → Character** you can switch off the open smile (for a softer closed one), swap the stripes for a plain green sports shirt, and put her hair up in a bun.
+
+## Design
+
+The app's mark is two leaves opening into a V around a rising sun: a seedling, a sunrise and a figure reaching up. It is drawn from one geometry in [`src/brand.ts`](src/brand.ts), which both the in-app logo ([`src/components/Logo.tsx`](src/components/Logo.tsx)) and every icon use. `node scripts/generate_icons.cjs` draws the iOS icon, the Android adaptive icon (gradient background, foreground and the Android 13 themed-icon shape), the favicon and the launch screen image; a test checks the mark stays inside Android's mask-safe circle and the splash screen's circular crop. The launch screen (via `expo-splash-screen`) stays up until the fonts and saved routines are ready, so the app opens straight onto the home screen.
+
+Colours, type sizes, corner radii and shadows live in [`src/components/design.ts`](src/components/design.ts); buttons, switches, choice rows, the segmented control, dialogs and the bottom sheet are shared components in [`src/components/ui.tsx`](src/components/ui.tsx), and icons are one stroke-weight SVG set in [`src/components/Icon.tsx`](src/components/Icon.tsx). Text colours meet WCAG AA contrast on the ivory background (secondary text 5.6:1, buttons 9.8:1), body text is at least 13 px, and numbers use lining, tabular figures so timers do not jump. Every screen is laid out for a 360 px wide phone and centres in a 540 px column on tablets and the web.
+
+To refresh the README image after a design change, start the web preview and run `node scripts/capture_readme.cjs`; it composes [`docs/images/verdant-yoga.png`](docs/images/verdant-yoga.png) from live screenshots.
 
 ## Local storage and offline use
 
@@ -107,7 +117,7 @@ npx expo export --platform all
 
 The 1.3.0 implementation passed 23 Playwright/controller/geometry tests, TypeScript checks, and all 21 Expo Doctor checks. Coverage includes routine timing, pause/resume, saved routine editing and persistence, audio switching, speech cancellation during voice-engine initialization, side announcements, ambient ducking, and SVG transition stability. Android assembly and iOS/web exports succeeded; the APK signature, alignment, and bundled audio hashes were verified.
 
-The audio guide adds nine tests: every move has lines in both styles, timeline changes map to the right moments, the voice sequence plays recordings, falls back to the device voice and cancels cleanly, every voice pack matches the script, and in the browser a voice installs, previews and is removed, a guided practice carries on with the page hidden and ends after its closing words, recordings play with the device voice standing in for a damaged one, and a change of position continues on its own. The full suite of 30 tests passes. Background playback with a locked screen, lock-screen controls, and Paradee playback on phones still need testing on a handset.
+The audio guide adds nine tests: every move has lines in both styles, timeline changes map to the right moments, the voice sequence plays recordings, falls back to the device voice and cancels cleanly, every voice pack matches the script, and in the browser a voice installs, previews and is removed, a guided practice carries on with the page hidden and ends after its closing words, recordings play with the device voice standing in for a damaged one, and a change of position continues on its own. The design refresh adds six more: the mark fits every platform's icon and splash limits; every ready-made routine converts into valid saved steps and copies get unused names; the routine sheet lists every move and starts the practice; a customised ready-made routine saves and passes the app's checks after a reload; both sides are added together and saved routines can be duplicated; and **Practice again** restarts from the first move. The full suite of 36 tests passes. Background playback with a locked screen, lock-screen controls, and Paradee playback on phones still need testing on a handset.
 
 Movement was captured in 36 live-app scenarios covering every distinct preset transition plus custom side changes and floor reversals, with no browser page errors. Representative previews were refreshed after the final easing and elbow changes. Screens were reviewed at phone-sized browser viewports. Physical-device installation, voice engines, audio interruptions, speaker listening, and iOS native behavior still need handset testing. An iOS JavaScript export is not an iOS native build. The README image is composed from actual app browser screenshots.
 
@@ -126,6 +136,7 @@ Motion tests check, for every selectable pair, true 3D bone lengths, planted con
 ## Assets and credits
 
 - Original SVG artwork: [`src/Illustration.tsx`](src/Illustration.tsx) and [`src/figure.ts`](src/figure.ts).
+- App icon, logo and launch screen: original, drawn from [`src/brand.ts`](src/brand.ts) by `scripts/generate_icons.cjs`.
 - Nature recordings: individually verified CC0 recordings by Q.K., Magnesus, and peridactyloptrix. Source links, processing details, and reproduction steps are in [`AUDIO_CREDITS.md`](AUDIO_CREDITS.md).
 - Transition bell: synthesized for this app; reproduced by `scripts/generate_chime.py`.
 - Guide voices: rendered with [Paradee](https://github.com/sahilmahendrakar/paradee) by Sahil Mahendrakar (Apache-2.0), an 8M-parameter model distilled from Kokoro-82M (Apache-2.0), using its Heart, Isabella, Puck and Fable voices; reproduced by `scripts/generate_voices.py`.

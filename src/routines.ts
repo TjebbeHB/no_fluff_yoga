@@ -123,6 +123,9 @@ const tabletop = p(
   "tabletop",
   "Place your hands below your shoulders and knees below your hips. Pad your knees and keep your neck long.",
 );
+// A move's id in the library and in saved routines: "tree-left", "fold".
+export const poseIdOf = (pose: Pick<Pose, "shape" | "side">) =>
+  `${pose.shape}${pose.side ? `-${pose.side}` : ""}`;
 export const poseLibrary: Array<Pose & { id: string }> = [
   mountain,
   reach,
@@ -143,16 +146,38 @@ export const poseLibrary: Array<Pose & { id: string }> = [
   sidebend("right"),
   butterfly,
   tabletop,
-].map((pose) => ({
-  ...pose,
-  id: `${pose.shape}${pose.side ? `-${pose.side}` : ""}`,
-}));
+].map((pose) => ({ ...pose, id: poseIdOf(pose) }));
 export const totalSeconds = (routine: Routine) =>
   routine.poses.reduce((sum, pose) => sum + pose.seconds, 0);
 export const durationLabel = (seconds: number) =>
-  seconds % 60 === 0
-    ? `${seconds / 60} min`
-    : `${Math.floor(seconds / 60)} min ${seconds % 60} sec`;
+  seconds < 60
+    ? `${seconds} sec`
+    : seconds % 60 === 0
+      ? `${seconds / 60} min`
+      : `${Math.floor(seconds / 60)} min ${seconds % 60} sec`;
+// One move in a saved routine, and the longest name a routine can have.
+export type Step = { poseId: string; seconds: number };
+export const NAME_LIMIT = 40;
+// Any routine as editable steps: the start of a customised copy.
+export const stepsOf = (routine: Routine): Step[] =>
+  routine.poses.map((pose) => ({
+    poseId: poseIdOf(pose),
+    seconds: pose.seconds,
+  }));
+// A name for a copy that no saved routine uses yet, within the length limit.
+export function copyName(name: string, taken: string[], suffix = "copy") {
+  for (let n = 1; ; n++) {
+    const tag = n === 1 ? ` (${suffix})` : ` (${suffix} ${n})`;
+    const candidate = name.slice(0, NAME_LIMIT - tag.length).trimEnd() + tag;
+    if (!taken.includes(candidate)) return candidate;
+  }
+}
+// A short clock time without a leading zero: 45 → "0:45", 90 → "1:30".
+export const clockLabel = (seconds: number) =>
+  `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, "0")}`;
+// A pose's name with its side, as the guide and the lists say it.
+export const poseLabel = (pose: Pick<Pose, "name" | "side">) =>
+  `${pose.name}${pose.side ? `, ${pose.side} side` : ""}`;
 export const routines: Routine[] = [
   {
     id: "morning",
