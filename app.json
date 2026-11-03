@@ -6,6 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "backgroundColor": "#F8F5ED",
+    "primaryColor": "#2E4A39",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tjebbehb.verdantyoga",
@@ -17,7 +19,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#F8F5ED",
+        "backgroundColor": "#2E4A39",
+        "backgroundImage": "./assets/android-icon-background.png",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
@@ -32,7 +35,11 @@
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "shortName": "Verdant",
+      "description": "Yoga, without ads or fluff. Follow illustrated routines or a calm audio guide.",
+      "themeColor": "#F8F5ED",
+      "backgroundColor": "#F8F5ED"
     },
     "plugins": [
       [
@@ -41,6 +48,15 @@
           "microphonePermission": false,
           "recordAudioAndroid": false,
           "enableBackgroundPlayback": true
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 150,
+          "resizeMode": "contain",
+          "backgroundColor": "#F8F5ED"
         }
       ],
       "expo-font",
